@@ -361,8 +361,8 @@ include 'includes/header.php';
                                 <i class="fas fa-envelope text-yellow-600 text-xl"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-800 mb-1">Email Addresses</h3>
-                                <p class="text-gray-600">info@ceylonecojourneys.com<br>guide@ceylonecojourneys.com</p>
+                                <h3 class="font-semibold text-gray-800 mb-1">Email</h3>
+                                <p><a class="text-green-700 hover:text-green-800 font-medium" href="mailto:hello@serendibpathways.com">hello@serendibpathways.com</a></p>
                             </div>
                         </div>
                         
@@ -437,24 +437,6 @@ include 'includes/header.php';
                         </div>
                     </div>
 
-                    <!-- Social Media -->
-                    <div class="mt-8">
-                        <h3 class="font-semibold text-gray-800 mb-4">Follow Us</h3>
-                        <div class="flex space-x-4">
-                            <a href="https://web.facebook.com/profile.php?id=61578332532881" target="_blank" class="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center transition duration-300">
-                                <i class="fab fa-facebook text-xl"></i>
-                            </a>
-                            <a href="https://www.instagram.com/ceylon_eco_journeys?igsh=MTg5dHlkOHJsMjhrdg==" target="_blank" class="w-12 h-12 bg-pink-600 hover:bg-pink-700 text-white rounded-full flex items-center justify-center transition duration-300">
-                                <i class="fab fa-instagram text-xl"></i>
-                            </a>
-                            <a href="https://wa.me/message/GMTN3UXGC3IIF1" target="_blank" class="w-12 h-12 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition duration-300">
-                                <i class="fab fa-whatsapp text-xl"></i>
-                            </a>
-                            <a href="http://www.youtube.com/@Ceylon-eco-journeys" target="_blank" class="w-12 h-12 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center transition duration-300">
-                                <i class="fab fa-youtube text-xl"></i>
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
