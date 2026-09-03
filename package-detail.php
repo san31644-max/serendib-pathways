@@ -21,6 +21,10 @@ if (!$package) {
     exit;
 }
 
+$page_title = $package['name'] . ' Sri Lanka Tour | Serendib Pathways';
+$page_description = mb_substr(trim(strip_tags((string) $package['description'])), 0, 155);
+$page_image = $package['image'] ?: 'assets/serendib-pathways-horizontal.png';
+
 include 'includes/header.php';
 ?>
 

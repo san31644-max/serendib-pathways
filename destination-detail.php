@@ -24,6 +24,10 @@ if (!$destination) {
     exit;
 }
 
+$page_title = $destination['name'] . ' Travel Guide | Serendib Pathways';
+$page_description = mb_substr(trim(strip_tags((string) $destination['description'])), 0, 155);
+$page_image = $destination['image'] ?: 'assets/serendib-pathways-horizontal.png';
+
 include 'includes/header.php';
 ?>
 
