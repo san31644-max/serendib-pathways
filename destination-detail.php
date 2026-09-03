@@ -1,24 +1,13 @@
 <?php
-$page_title = "Destination Details - Serendib Pathways";
+$page_title = 'Destination Details - Serendib Pathways';
 require_once 'config/database.php';
 
-$database = new Database();
-$db = $database->getConnection();
+$db = (new Database())->getConnection();
+$destination_id = isset($_GET['id']) ? max(0, (int) $_GET['id']) : 0;
+$stmt = $db->prepare('SELECT d.*, c.category_name FROM destinations d LEFT JOIN categories c ON d.category_id=c.category_id WHERE d.id=?');
+$stmt->execute([$destination_id]);
+$destination = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$destination_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-$destination = null;
-
-if ($destination_id) {
-    $query = "SELECT d.*, c.category_name, c.category_id
-              FROM destinations d
-              LEFT JOIN categories c ON d.category_id = c.category_id
-              WHERE d.id = ?";
-    $stmt = $db->prepare($query);
-    $stmt->execute([$destination_id]);
-    $destination = $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-// Redirect if destination not found
 if (!$destination) {
     header('Location: destinations.php');
     exit;
@@ -27,204 +16,131 @@ if (!$destination) {
 $page_title = $destination['name'] . ' Travel Guide | Serendib Pathways';
 $page_description = mb_substr(trim(strip_tags((string) $destination['description'])), 0, 155);
 $page_image = $destination['image'] ?: 'assets/serendib-pathways-horizontal.png';
+$extra_stylesheet = 'assets/css/destination-detail.css?v=1';
+$gallery = array_values(array_filter([
+    $destination['image'], $destination['gallery_image1'], $destination['gallery_image2'],
+    $destination['gallery_image3'], $destination['gallery_image4'],
+]));
+$gallery = array_values(array_unique($gallery));
+$highlight_text = trim((string) ($destination['highlights'] ?? ''));
+$highlights = array_values(array_filter(array_map('trim', preg_split('/[\r\n,]+/', $highlight_text))));
 
 include 'includes/header.php';
 ?>
 
-<!-- Hero Section -->
-<section class="relative bg-gradient-to-r from-green-600 to-blue-600 text-white py-20">
-    <div class="absolute inset-0 bg-black opacity-40"></div>
-    <div class="relative container mx-auto px-4 text-center">
-        <h1 class="text-5xl md:text-6xl font-bold mb-6"><?php echo htmlspecialchars($destination['name']); ?></h1>
-        <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-            <?php echo htmlspecialchars($destination['category_name'] ?? 'Uncategorized'); ?>
-        </p>
+<section class="destination-showcase" style="--destination-image:url('<?= htmlspecialchars($destination['image'], ENT_QUOTES) ?>')">
+  <div class="destination-showcase__shade"></div>
+  <div class="catalog-shell destination-showcase__content">
+    <nav class="destination-crumbs" aria-label="Breadcrumb"><a href="index.php">Home</a><span>›</span><a href="destinations.php">Destinations</a><span>›</span><strong><?= htmlspecialchars($destination['name']) ?></strong></nav>
+    <div class="destination-kicker"><span></span><?= htmlspecialchars($destination['category_name'] ?: 'Sri Lanka') ?></div>
+    <h1><?= htmlspecialchars($destination['name']) ?></h1>
+    <p><?= htmlspecialchars($destination['location'] ?: 'Sri Lanka') ?></p>
+    <div class="destination-hero-actions">
+      <a class="destination-primary-action" href="contact.php?destination=<?= urlencode($destination['name']) ?>">Plan this journey <i class="fa-solid fa-arrow-right"></i></a>
+      <button type="button" class="destination-glass-action" onclick="openGeminiChat()"><i class="fa-solid fa-wand-magic-sparkles"></i> Ask Nila</button>
     </div>
+  </div>
+  <a class="destination-scroll-cue" href="#destination-story" aria-label="Explore destination details"><span>Explore</span><i class="fa-solid fa-arrow-down"></i></a>
 </section>
 
-<!-- Destination Details -->
-<section class="py-16 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="grid lg:grid-cols-2 gap-12 items-start">
-            <!-- Image Gallery -->
-            <div class="space-y-4">
-                <!-- Main Image -->
-                <div class="relative">
-                    <div id="main-image" class="h-96 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg overflow-hidden cursor-pointer"
-                         style="background-image: url('<?php echo htmlspecialchars($destination['image'] ?: '/placeholder.svg?height=400&width=600&text=No%20Image'); ?>'); background-size: cover; background-position: center;"
-                         onclick="openImageModal(this.style.backgroundImage)">
-                        <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition duration-300 flex items-center justify-center">
-                            <i class="fas fa-expand text-white text-2xl opacity-0 hover:opacity-100 transition duration-300"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Gallery thumbnails -->
-                <div class="grid grid-cols-4 gap-2">
-                    <?php
-                    $gallery_images = [];
-                    if (!empty($destination['gallery_image1'])) {
-                        $gallery_images[] = $destination['gallery_image1'];
-                    }
-                    if (!empty($destination['gallery_image2'])) {
-                        $gallery_images[] = $destination['gallery_image2'];
-                    }
-                    if (!empty($destination['gallery_image3'])) {
-                        $gallery_images[] = $destination['gallery_image3'];
-                    }
-                    if (!empty($destination['gallery_image4'])) {
-                        $gallery_images[] = $destination['gallery_image4'];
-                    }
-
-                    $placeholder_base = '/placeholder.svg?height=80&width=120&text=View%20';
-                    for ($i = count($gallery_images); $i < 4; $i++) {
-                        $gallery_images[] = $placeholder_base . ($i + 1);
-                    }
-
-                    foreach ($gallery_images as $index => $image):
-                        $imageUrl = htmlspecialchars($image);
-                        $is_first_thumbnail = ($index === 0);
-                    ?>
-                    <div class="h-20 rounded cursor-pointer border-2
-                        <?php echo $is_first_thumbnail ? 'border-green-500' : 'border-transparent'; ?>
-                        hover:border-green-500 transition duration-300 overflow-hidden"
-                         style="background-image: url('<?php echo $imageUrl; ?>'); background-size: cover; background-position: center;"
-                         onclick="changeMainImage('url(\'<?php echo $imageUrl; ?>\')', this)">
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-
-            <!-- Details -->
-            <div class="space-y-6">
-                <div>
-                    <h2 class="text-3xl font-bold text-gray-800 mb-4">About This Destination</h2>
-                    <p class="text-gray-600 text-lg leading-relaxed"><?php echo nl2br(htmlspecialchars($destination['description'])); ?></p>
-                </div>
-
-                <?php if ($destination['highlights']): ?>
-                <div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Highlights</h3>
-                    <div class="bg-green-50 p-6 rounded-lg">
-                        <p class="text-gray-700"><?php echo nl2br(htmlspecialchars($destination['highlights'])); ?></p>
-                    </div>
-                </div>
-                <?php endif; ?>
-
-                <div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Category Details</h3>
-                    <div class="flex items-center space-x-2 text-gray-600">
-                        <i class="fas fa-tag text-green-600"></i>
-                        <span class="text-lg"><?php echo htmlspecialchars($destination['category_name'] ?? 'Uncategorized'); ?></span>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 pt-6">
-                    <a href="contact.php" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg text-center font-semibold transition duration-300">
-                        <i class="fas fa-envelope mr-2"></i>
-                        Inquire Now
-                    </a>
-                    <button onclick="openGeminiChat()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg text-center font-semibold transition duration-300">
-                        <i class="fas fa-comments mr-2"></i>
-                        Chat with Us
-                    </button>
-                    <a href="packages.php" class="flex-1 border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white py-3 px-6 rounded-lg text-center font-semibold transition duration-300">
-                        <i class="fas fa-box mr-2"></i>
-                        View Packages
-                    </a>
-                </div>
-            </div>
-        </div>
+<section class="destination-story" id="destination-story">
+  <div class="catalog-shell destination-story__grid">
+    <div class="destination-story__intro">
+      <span class="destination-eyebrow">WHY GO</span>
+      <h2>A place that stays<br>with <em>you.</em></h2>
     </div>
+    <div class="destination-story__copy">
+      <p><?= nl2br(htmlspecialchars($destination['description'])) ?></p>
+      <div class="destination-facts">
+        <div><i class="fa-solid fa-location-dot"></i><span>Region</span><strong><?= htmlspecialchars($destination['location'] ?: 'Sri Lanka') ?></strong></div>
+        <div><i class="fa-solid fa-compass"></i><span>Experience</span><strong><?= htmlspecialchars($destination['category_name'] ?: 'Discovery') ?></strong></div>
+        <div><i class="fa-regular fa-images"></i><span>Gallery</span><strong><?= count($gallery) ?> views</strong></div>
+      </div>
+    </div>
+  </div>
 </section>
+
+<?php if ($gallery): ?>
+<section class="destination-gallery-section">
+  <div class="catalog-shell">
+    <div class="destination-section-heading"><div><span>LOOK CLOSER</span><h2>Scenes from<br><em><?= htmlspecialchars($destination['name']) ?>.</em></h2></div><p>Select any photograph to view it in full.</p></div>
+    <div class="destination-gallery destination-gallery--<?= min(count($gallery), 5) ?>">
+      <?php foreach ($gallery as $index => $image): ?>
+      <button type="button" class="destination-gallery__item destination-gallery__item--<?= $index + 1 ?>" data-gallery-image="<?= htmlspecialchars($image, ENT_QUOTES) ?>" aria-label="Open <?= htmlspecialchars($destination['name']) ?> photograph <?= $index + 1 ?>">
+        <img src="<?= htmlspecialchars($image) ?>" alt="<?= htmlspecialchars($destination['name']) ?> — photograph <?= $index + 1 ?>" loading="<?= $index > 1 ? 'lazy' : 'eager' ?>">
+        <span><b><?= str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) ?></b><i class="fa-solid fa-expand"></i></span>
+      </button>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
+
+<?php if ($highlights): ?>
+<section class="destination-highlights-section">
+  <div class="catalog-shell destination-highlights-grid">
+    <div><span class="destination-eyebrow">DON'T MISS</span><h2>Signature<br><em>moments.</em></h2></div>
+    <ol>
+      <?php foreach ($highlights as $index => $highlight): ?>
+      <li><span><?= str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) ?></span><p><?= htmlspecialchars($highlight) ?></p></li>
+      <?php endforeach; ?>
+    </ol>
+  </div>
+</section>
+<?php endif; ?>
 
 <?php include 'includes/destination-hotels.php'; ?>
 
-<!-- Image Modal -->
-<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
-    <div class="relative max-w-4xl max-h-full">
-        <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white text-2xl hover:text-gray-300 z-10">
-            <i class="fas fa-times"></i>
-        </button>
-        <img id="modalImage" src="/placeholder.svg" alt="Gallery Image" class="max-w-full max-h-full object-contain rounded-lg">
+<section class="destination-related-section">
+  <div class="catalog-shell">
+    <div class="destination-section-heading"><div><span>KEEP EXPLORING</span><h2>Continue your<br><em>journey.</em></h2></div><a href="destinations.php">View all destinations <i class="fa-solid fa-arrow-right"></i></a></div>
+    <div class="destination-related-grid">
+      <?php
+      $relatedStmt = $db->prepare('SELECT id,name,description,image,location FROM destinations WHERE id<>? ORDER BY RAND() LIMIT 3');
+      $relatedStmt->execute([$destination_id]);
+      foreach ($relatedStmt->fetchAll(PDO::FETCH_ASSOC) as $related):
+      ?>
+      <a class="destination-related-card" href="destination-detail.php?id=<?= (int) $related['id'] ?>">
+        <img src="<?= htmlspecialchars($related['image']) ?>" alt="<?= htmlspecialchars($related['name']) ?>" loading="lazy">
+        <span><?= htmlspecialchars($related['location'] ?: 'Sri Lanka') ?></span>
+        <h3><?= htmlspecialchars($related['name']) ?></h3>
+        <p><?= htmlspecialchars(mb_substr(strip_tags($related['description']), 0, 105)) ?>…</p>
+        <b>Discover this place <i class="fa-solid fa-arrow-right"></i></b>
+      </a>
+      <?php endforeach; ?>
     </div>
-</div>
-
-<!-- Related Destinations -->
-<section class="py-16 bg-gray-100">
-    <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Other Destinations You Might Like</h2>
-        <div class="grid md:grid-cols-3 gap-8">
-            <?php
-            // Get related destinations excluding the current one
-            $query = "SELECT * FROM destinations WHERE id != ? ORDER BY RAND() LIMIT 3";
-            $stmt = $db->prepare($query);
-            $stmt->execute([$destination_id]);
-            $related = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            foreach ($related as $related_dest):
-            ?>
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                <div class="h-48 bg-gradient-to-r from-green-400 to-blue-500" style="background-image: url('<?php echo htmlspecialchars($related_dest['image'] ?: '/placeholder.svg?height=192&width=288&text=Related%20Image'); ?>'); background-size: cover; background-position: center;"></div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold mb-2"><?php echo htmlspecialchars($related_dest['name']); ?></h3>
-                    <p class="text-gray-600 mb-4"><?php echo htmlspecialchars(substr($related_dest['description'], 0, 100)) . '...'; ?></p>
-                    <a href="destination-detail.php?id=<?php echo $related_dest['id']; ?>" class="text-green-600 hover:text-green-800 font-semibold">Learn More →</a>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
+  </div>
 </section>
 
+<section class="destination-final-cta">
+  <div class="catalog-shell"><span>YOUR JOURNEY, YOUR WAY</span><h2>Ready to experience<br><em><?= htmlspecialchars($destination['name']) ?>?</em></h2><p>Tell us what moves you. We will shape the route, pace and stays around you.</p><a href="contact.php?destination=<?= urlencode($destination['name']) ?>">Start planning <i class="fa-solid fa-arrow-right"></i></a></div>
+</section>
+
+<div class="destination-lightbox" id="destination-lightbox" aria-hidden="true" role="dialog" aria-label="Destination photograph">
+  <button type="button" class="destination-lightbox__close" aria-label="Close image"><i class="fa-solid fa-xmark"></i></button>
+  <button type="button" class="destination-lightbox__nav destination-lightbox__prev" aria-label="Previous image"><i class="fa-solid fa-chevron-left"></i></button>
+  <figure><img src="" alt=""><figcaption></figcaption></figure>
+  <button type="button" class="destination-lightbox__nav destination-lightbox__next" aria-label="Next image"><i class="fa-solid fa-chevron-right"></i></button>
+</div>
+
 <script>
-    function changeMainImage(backgroundImageUrl, thumbnail) {
-        const mainImage = document.getElementById('main-image');
-        mainImage.style.backgroundImage = backgroundImageUrl;
-
-        // Remove active border from all thumbnails
-        document.querySelectorAll('.grid div[onclick^="changeMainImage"]').forEach(thumb => {
-            thumb.classList.remove('border-green-500');
-            thumb.classList.add('border-transparent');
-        });
-
-        // Add active border to clicked thumbnail
-        thumbnail.classList.remove('border-transparent');
-        thumbnail.classList.add('border-green-500');
-    }
-
-    function openImageModal(backgroundImage) {
-        const modal = document.getElementById('imageModal');
-        const modalImage = document.getElementById('modalImage');
-
-        // Extract URL from background-image style
-        const imageUrl = backgroundImage.slice(5, -2);
-        modalImage.src = imageUrl;
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // Disable background scroll
-    }
-
-    function closeImageModal() {
-        const modal = document.getElementById('imageModal');
-        modal.classList.add('hidden');
-        document.body.style.overflow = 'auto'; // Enable background scroll
-    }
-
-    // Handle escape key to close modal
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeImageModal();
-        }
-    });
-
-    // Close modal on backdrop click
-    document.getElementById('imageModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeImageModal();
-        }
-    });
-
+(() => {
+  const items = [...document.querySelectorAll('[data-gallery-image]')];
+  const lightbox = document.querySelector('#destination-lightbox');
+  if (!items.length || !lightbox) return;
+  const image = lightbox.querySelector('img');
+  const caption = lightbox.querySelector('figcaption');
+  let active = 0;
+  const show = index => { active = (index + items.length) % items.length; image.src = items[active].dataset.galleryImage; image.alt = items[active].getAttribute('aria-label'); caption.textContent = `${active + 1} / ${items.length}`; };
+  const open = index => { show(index); lightbox.classList.add('is-open'); lightbox.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; };
+  const close = () => { lightbox.classList.remove('is-open'); lightbox.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; };
+  items.forEach((item, index) => item.addEventListener('click', () => open(index)));
+  lightbox.querySelector('.destination-lightbox__close').addEventListener('click', close);
+  lightbox.querySelector('.destination-lightbox__prev').addEventListener('click', () => show(active - 1));
+  lightbox.querySelector('.destination-lightbox__next').addEventListener('click', () => show(active + 1));
+  lightbox.addEventListener('click', event => { if (event.target === lightbox) close(); });
+  document.addEventListener('keydown', event => { if (!lightbox.classList.contains('is-open')) return; if (event.key === 'Escape') close(); if (event.key === 'ArrowLeft') show(active - 1); if (event.key === 'ArrowRight') show(active + 1); });
+})();
 </script>
 
 <?php include 'includes/footer.php'; ?>

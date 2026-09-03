@@ -60,6 +60,7 @@ if ($_POST) {
     
     if ($action == 'add') {
         $name = trim($_POST['name']);
+        $location = trim($_POST['location'] ?? '');
         $description = trim($_POST['description']);
         $image = trim($_POST['image']);
         $category_id = intval($_POST['category_id']);
@@ -76,10 +77,10 @@ if ($_POST) {
             $cat_stmt->execute([$category_id]);
             
             if ($cat_stmt->fetch()) {
-                $query = "INSERT INTO destinations (name, description, image, category_id, highlights, gallery_image1, gallery_image2, gallery_image3, gallery_image4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $query = "INSERT INTO destinations (name, location, description, image, category_id, highlights, gallery_image1, gallery_image2, gallery_image3, gallery_image4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $db->prepare($query);
                 
-                if ($stmt->execute([$name, $description, $image, $category_id, $highlights, $gallery_image1, $gallery_image2, $gallery_image3, $gallery_image4])) {
+                if ($stmt->execute([$name, $location, $description, $image, $category_id, $highlights, $gallery_image1, $gallery_image2, $gallery_image3, $gallery_image4])) {
                     $message = "Destination added successfully!";
                     $message_type = "success";
                 } else {
@@ -99,6 +100,7 @@ if ($_POST) {
     if ($action == 'update' && isset($_POST['id'])) {
         $id = intval($_POST['id']);
         $name = trim($_POST['name']);
+        $location = trim($_POST['location'] ?? '');
         $description = trim($_POST['description']);
         $image = trim($_POST['image']);
         $category_id = intval($_POST['category_id']);
@@ -115,10 +117,10 @@ if ($_POST) {
             $cat_stmt->execute([$category_id]);
             
             if ($cat_stmt->fetch()) {
-                $query = "UPDATE destinations SET name = ?, description = ?, image = ?, category_id = ?, highlights = ?, gallery_image1 = ?, gallery_image2 = ?, gallery_image3 = ?, gallery_image4 = ? WHERE id = ?";
+                $query = "UPDATE destinations SET name = ?, location = ?, description = ?, image = ?, category_id = ?, highlights = ?, gallery_image1 = ?, gallery_image2 = ?, gallery_image3 = ?, gallery_image4 = ? WHERE id = ?";
                 $stmt = $db->prepare($query);
                 
-                if ($stmt->execute([$name, $description, $image, $category_id, $highlights, $gallery_image1, $gallery_image2, $gallery_image3, $gallery_image4, $id])) {
+                if ($stmt->execute([$name, $location, $description, $image, $category_id, $highlights, $gallery_image1, $gallery_image2, $gallery_image3, $gallery_image4, $id])) {
                     $message = "Destination updated successfully!";
                     $message_type = "success";
                 } else {
@@ -444,6 +446,13 @@ include 'includes/admin_header.php';
                     Don't see your category? <a href="categories.php" class="text-blue-600 hover:text-blue-800 underline">Manage categories</a>
                 </p>
             </div>
+        </div>
+
+        <div class="mt-4">
+            <label for="destination_location" class="block text-sm font-medium text-gray-700 mb-2">Location / Region</label>
+            <input type="text" id="destination_location" name="location" placeholder="e.g. Badulla, Uva Province"
+                   value="<?php echo $edit_destination ? htmlspecialchars($edit_destination['location'] ?? '') : ''; ?>"
+                   class="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
         </div>
         
         <div class="mt-4">
