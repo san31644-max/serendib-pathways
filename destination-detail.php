@@ -16,7 +16,8 @@ if (!$destination) {
 $page_title = $destination['name'] . ' Travel Guide | Serendib Pathways';
 $page_description = mb_substr(trim(strip_tags((string) $destination['description'])), 0, 155);
 $page_image = $destination['image'] ?: 'assets/serendib-pathways-horizontal.png';
-$extra_stylesheet = 'assets/css/destination-detail.css?v=1';
+$extra_stylesheet = 'assets/css/destination-detail.css?v=2';
+$extra_stylesheet_secondary = 'assets/css/destination-meaning.css?v=1';
 $gallery = array_values(array_filter([
     $destination['image'], $destination['gallery_image1'], $destination['gallery_image2'],
     $destination['gallery_image3'], $destination['gallery_image4'],
@@ -24,6 +25,16 @@ $gallery = array_values(array_filter([
 $gallery = array_values(array_unique($gallery));
 $highlight_text = trim((string) ($destination['highlights'] ?? ''));
 $highlights = array_values(array_filter(array_map('trim', preg_split('/[\r\n,]+/', $highlight_text))));
+$place_guides = [
+ 'Sigiriya'=>['label'=>'Cultural significance','meaning'=>'Sigiriya preserves an extraordinary fifth-century royal centre built around a natural rock fortress. Its formal gardens, hydraulic engineering, paintings and summit ruins reveal remarkable artistic and technical ambition. The landscape also carries a longer monastic history, making it culturally layered rather than simply a palace on a rock.','experience'=>'Arrive near opening time, move slowly through the water gardens and pause at the elevated terraces before climbing. The summit brings the architecture and surrounding plains into one unforgettable view.','respect'=>'Wear secure footwear, carry water and follow directional signs. Photography restrictions may apply near ancient paintings; observe posted guidance and avoid touching archaeological surfaces.'],
+ 'Bentota'=>['label'=>'Coastal character','meaning'=>'Bentota is shaped by the meeting of river, lagoon and Indian Ocean. Its importance is experiential rather than sacred: fishing life, water-based travel, tropical gardens and a long sweep of coast create one of the southwest island’s classic places to slow down.','experience'=>'Balance quiet beach time with an early river journey, when the water is calmer and birdlife is active. Leave space for an unhurried sunset rather than filling every hour.','respect'=>'Choose responsible boat operators, avoid disturbing wildlife and keep plastic away from the beach and waterways. Swim only where local safety advice permits.'],
+ 'Temple of the Sacred Tooth Relic'=>['label'=>'Sacred significance','meaning'=>'This temple is revered because it houses the Sacred Tooth Relic of the Buddha. Across Sri Lankan history, guardianship of the relic became closely connected with sovereignty and protection of the Buddhist tradition. Today it remains a living place of worship, with daily offerings, drumming and devotion at the heart of Kandy.','experience'=>'Visit during a puja to hear ceremonial drums and witness devotees offering flowers. The experience is most meaningful when approached patiently as worship rather than as a performance.','respect'=>'Cover shoulders and knees, remove shoes and hats, and keep your voice low. Never pose with your back toward a Buddha image or obstruct worshippers making offerings.'],
+ 'Diva Guhawa'=>['label'=>'Sacred tradition','meaning'=>'Diva Guhawa belongs to the devotional landscape associated with Sri Pada. Buddhist tradition connects the cave with the Buddha’s visit to the sacred mountain, giving this modest sanctuary significance far beyond its physical scale. It is best understood through faith, pilgrimage and local memory.','experience'=>'Allow time for quiet observation of the cave shrine and its mountain setting. A knowledgeable local guide can help distinguish devotional tradition, later artistic additions and the wider Sri Pada pilgrimage story.','respect'=>'Dress modestly, remove footwear where requested and avoid loud conversation. Ask before photographing people, rituals or the interior of a shrine.'],
+ 'Dunhinda Falls'=>['label'=>'Natural significance','meaning'=>'Dunhinda is celebrated for the veil of spray that gathers around its forested gorge—the mist-like effect reflected in its name. It is not presented as a major sacred site; its power comes from water, rock, forest and the dramatic reveal at the end of the trail.','experience'=>'Walk in the cooler morning hours and pause at designated viewpoints. After rain the waterfall is especially powerful, though the path may also be more slippery.','respect'=>'Stay behind safety barriers, wear shoes with grip and carry every item of waste back with you. Do not enter dangerous currents or climb wet rocks for photographs.'],
+ 'Mahiyanganaya'=>['label'=>'Sacred significance','meaning'=>'Mahiyanganaya is one of Sri Lanka’s deeply revered Buddhist landscapes. According to Buddhist tradition, the Buddha visited this region on his first journey to the island. The Mahiyangana stupa is connected with the earliest layer of the island’s Buddhist sacred geography, while the wider region also opens a window onto rural life and indigenous Vedda heritage.','experience'=>'Visit the sacred precinct in the softer morning or evening light, then explore the wider region with someone able to explain both Buddhist tradition and local community history respectfully.','respect'=>'Dress modestly within temple grounds, remove shoes and hats, and never treat indigenous communities as staged attractions. Seek consent before photography and support community-led experiences.'],
+ 'Muthiyangana Raja Maha Vihara'=>['label'=>'Sacred significance','meaning'=>'Muthiyangana is traditionally counted among the Solosmasthana—the sixteen places in Sri Lanka revered as having been visited by the Buddha. That belief makes the temple one of Badulla’s most important devotional spaces. Its stupa, shrines and long continuity of worship connect visitors with generations of Buddhist practice.','experience'=>'Walk through the precinct without rushing, observing the relationship between the stupa, shrine rooms, offerings and mature temple landscape. Early morning offers a particularly calm atmosphere.','respect'=>'Wear clothing that covers shoulders and knees, remove shoes and hats, and walk around sacred structures respectfully. Avoid intrusive photography during worship.'],
+];
+$place_guide = $place_guides[$destination['name']] ?? null;
 
 include 'includes/header.php';
 ?>
@@ -59,6 +70,19 @@ include 'includes/header.php';
     </div>
   </div>
 </section>
+
+<?php if ($place_guide): ?>
+<section class="destination-meaning-section">
+  <div class="catalog-shell">
+    <div class="destination-section-heading"><div><span><?= htmlspecialchars(strtoupper($place_guide['label'])) ?></span><h2>Understand the<br><em>place.</em></h2></div><p>Travel feels richer when the story, living meaning and local customs come with the view.</p></div>
+    <div class="destination-meaning-grid">
+      <article class="destination-meaning-card destination-meaning-card--lead"><span>01</span><i class="fa-solid fa-landmark-dome"></i><h3>Why it matters</h3><p><?= htmlspecialchars($place_guide['meaning']) ?></p></article>
+      <article class="destination-meaning-card"><span>02</span><i class="fa-regular fa-compass"></i><h3>How to experience it</h3><p><?= htmlspecialchars($place_guide['experience']) ?></p></article>
+      <article class="destination-meaning-card"><span>03</span><i class="fa-solid fa-hands-praying"></i><h3>Visit with respect</h3><p><?= htmlspecialchars($place_guide['respect']) ?></p></article>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
 
 <?php if ($gallery): ?>
 <section class="destination-gallery-section">
