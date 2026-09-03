@@ -20,6 +20,7 @@ yarn-error.log*
 .env*
 /config/gemini.local.php
 /config/database.local.php
+/assets/uploads/
 
 # local deployment artifacts and original source media
 **/.DS_Store

@@ -14,9 +14,49 @@ $message = '';
 $message_type = '';
 $edit_destination = null;
 
+function destination_image_value(string $upload_field, string $current_value): string {
+    if (!isset($_FILES[$upload_field]) || $_FILES[$upload_field]['error'] === UPLOAD_ERR_NO_FILE) {
+        return trim($current_value);
+    }
+
+    $file = $_FILES[$upload_field];
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        throw new RuntimeException('One of the images could not be uploaded. Please try again.');
+    }
+    if ((int) $file['size'] > 8 * 1024 * 1024) {
+        throw new RuntimeException('Each image must be 8 MB or smaller.');
+    }
+
+    $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'];
+    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
+    if (!isset($allowed[$mime]) || @getimagesize($file['tmp_name']) === false) {
+        throw new RuntimeException('Only valid JPG, PNG, WebP or GIF images are allowed.');
+    }
+
+    $upload_dir = dirname(__DIR__) . '/assets/uploads/destinations';
+    if (!is_dir($upload_dir) && !mkdir($upload_dir, 0775, true) && !is_dir($upload_dir)) {
+        throw new RuntimeException('The destination upload folder is not writable.');
+    }
+
+    $filename = date('Ymd-His') . '-' . bin2hex(random_bytes(8)) . '.' . $allowed[$mime];
+    if (!move_uploaded_file($file['tmp_name'], $upload_dir . '/' . $filename)) {
+        throw new RuntimeException('The image could not be saved on the server.');
+    }
+    return 'assets/uploads/destinations/' . $filename;
+}
+
 // Handle form submission
 if ($_POST) {
     $action = $_POST['action'];
+    try {
+        foreach (['image', 'gallery_image1', 'gallery_image2', 'gallery_image3', 'gallery_image4'] as $image_field) {
+            $_POST[$image_field] = destination_image_value($image_field . '_upload', (string) ($_POST[$image_field] ?? ''));
+        }
+    } catch (RuntimeException $upload_exception) {
+        $message = $upload_exception->getMessage();
+        $message_type = 'error';
+        $action = 'upload_error';
+    }
     
     if ($action == 'add') {
         $name = trim($_POST['name']);
@@ -375,7 +415,7 @@ include 'includes/admin_header.php';
         </div>
     <?php else: ?>
     
-    <form method="POST" action="">
+    <form method="POST" action="" enctype="multipart/form-data">
         <input type="hidden" name="action" value="<?php echo $edit_destination ? 'update' : 'add'; ?>">
         <?php if ($edit_destination): ?>
             <input type="hidden" name="id" value="<?php echo $edit_destination['id']; ?>">
@@ -419,8 +459,12 @@ include 'includes/admin_header.php';
         </div>
         
         <div class="mt-4">
-            <label for="destination_image" class="block text-sm font-medium text-gray-700 mb-2">Main Image URL</label>
-            <input type="url" id="destination_image" name="image" placeholder="https://example.com/image.jpg" 
+            <label for="destination_image_upload" class="block text-sm font-medium text-gray-700 mb-2">Main destination photo</label>
+            <input type="file" id="destination_image_upload" name="image_upload" accept="image/jpeg,image/png,image/webp,image/gif"
+                   class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm file:mr-4 file:rounded-full file:border-0 file:bg-green-100 file:px-4 file:py-2 file:font-semibold file:text-green-800 hover:file:bg-green-200">
+            <p class="mt-1 text-xs text-gray-500">JPG, PNG, WebP or GIF, up to 8 MB. A new upload replaces the current photo.</p>
+            <label for="destination_image" class="block text-xs font-medium text-gray-600 mt-3 mb-1">Or use an image URL/path</label>
+            <input type="text" id="destination_image" name="image" placeholder="assets/example.jpg or https://example.com/image.jpg" 
                    value="<?php echo $edit_destination ? htmlspecialchars($edit_destination['image']) : ''; ?>"
                    class="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
         </div>
@@ -430,26 +474,30 @@ include 'includes/admin_header.php';
             <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-4">Gallery Images (Optional)</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mobile-gallery-grid">
                 <div>
-                    <label for="gallery_image1" class="block text-sm font-medium text-gray-700 mb-2">Gallery Image 1</label>
-                    <input type="url" id="gallery_image1" name="gallery_image1" placeholder="https://example.com/gallery1.jpg" 
+                    <label for="gallery_image1_upload" class="block text-sm font-medium text-gray-700 mb-2">Gallery Image 1</label>
+                    <input type="file" id="gallery_image1_upload" name="gallery_image1_upload" accept="image/jpeg,image/png,image/webp,image/gif" class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm">
+                    <input type="text" id="gallery_image1" name="gallery_image1" placeholder="Optional URL or existing path" 
                            value="<?php echo $edit_destination ? htmlspecialchars($edit_destination['gallery_image1']) : ''; ?>"
                            class="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 </div>
                 <div>
-                    <label for="gallery_image2" class="block text-sm font-medium text-gray-700 mb-2">Gallery Image 2</label>
-                    <input type="url" id="gallery_image2" name="gallery_image2" placeholder="https://example.com/gallery2.jpg" 
+                    <label for="gallery_image2_upload" class="block text-sm font-medium text-gray-700 mb-2">Gallery Image 2</label>
+                    <input type="file" id="gallery_image2_upload" name="gallery_image2_upload" accept="image/jpeg,image/png,image/webp,image/gif" class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm">
+                    <input type="text" id="gallery_image2" name="gallery_image2" placeholder="Optional URL or existing path" 
                            value="<?php echo $edit_destination ? htmlspecialchars($edit_destination['gallery_image2']) : ''; ?>"
                            class="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 </div>
                 <div>
-                    <label for="gallery_image3" class="block text-sm font-medium text-gray-700 mb-2">Gallery Image 3</label>
-                    <input type="url" id="gallery_image3" name="gallery_image3" placeholder="https://example.com/gallery3.jpg" 
+                    <label for="gallery_image3_upload" class="block text-sm font-medium text-gray-700 mb-2">Gallery Image 3</label>
+                    <input type="file" id="gallery_image3_upload" name="gallery_image3_upload" accept="image/jpeg,image/png,image/webp,image/gif" class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm">
+                    <input type="text" id="gallery_image3" name="gallery_image3" placeholder="Optional URL or existing path" 
                            value="<?php echo $edit_destination ? htmlspecialchars($edit_destination['gallery_image3']) : ''; ?>"
                            class="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 </div>
                 <div>
-                    <label for="gallery_image4" class="block text-sm font-medium text-gray-700 mb-2">Gallery Image 4</label>
-                    <input type="url" id="gallery_image4" name="gallery_image4" placeholder="https://example.com/gallery4.jpg" 
+                    <label for="gallery_image4_upload" class="block text-sm font-medium text-gray-700 mb-2">Gallery Image 4</label>
+                    <input type="file" id="gallery_image4_upload" name="gallery_image4_upload" accept="image/jpeg,image/png,image/webp,image/gif" class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm">
+                    <input type="text" id="gallery_image4" name="gallery_image4" placeholder="Optional URL or existing path" 
                            value="<?php echo $edit_destination ? htmlspecialchars($edit_destination['gallery_image4']) : ''; ?>"
                            class="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 </div>
@@ -750,18 +798,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Validate URLs if provided
+            // Accept either full image URLs or local assets/... paths.
             const urlFields = ['destination_image', 'gallery_image1', 'gallery_image2', 'gallery_image3', 'gallery_image4'];
             for (let fieldId of urlFields) {
                 const field = document.getElementById(fieldId);
-                if (field && field.value) {
-                    try {
-                        new URL(field.value);
-                    } catch (e) {
-                        alert(`Please enter a valid URL for ${field.labels[0].textContent}`);
-                        field.focus();
-                        return false;
-                    }
+                if (field && field.value && !/^(https?:\/\/|assets\/)/i.test(field.value.trim())) {
+                    e.preventDefault();
+                    alert('Use a full https:// image URL or a local assets/... path.');
+                    field.focus();
+                    return false;
                 }
             }
         });
