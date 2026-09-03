@@ -12,10 +12,6 @@ Sri Lanka travel website powered by PHP, MariaDB and Gemini.
 
 ## Production deployment
 
-Pushes to `main` deploy automatically through `.github/workflows/deploy.yml` after these GitHub Actions repository secrets are configured:
+The EC2 server checks the public `main` branch every minute using a systemd timer and deploys new commits with `deployment/deploy.sh`. This outbound-only design does not store an EC2 private key in GitHub.
 
-- `EC2_HOST`
-- `EC2_USER`
-- `EC2_SSH_KEY`
-
-Production database and Gemini configuration files are preserved during deployments.
+Production database credentials, Gemini configuration and uploaded files are preserved during deployments.
