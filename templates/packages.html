@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Packages - Ceylon ECO Journeys</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-green-800 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-leaf text-2xl text-green-300"></i>
+                    <h1 class="text-2xl font-bold">Ceylon ECO Journeys</h1>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="index.html" class="hover:text-green-300 transition duration-300">Home</a>
+                    <a href="about.html" class="hover:text-green-300 transition duration-300">About</a>
+                    <a href="destinations.html" class="hover:text-green-300 transition duration-300">Destinations</a>
+                    <a href="packages.html" class="text-green-300 font-semibold">Packages</a>
+                    <a href="contact.html" class="hover:text-green-300 transition duration-300">Contact Us</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-white">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                <a href="index.html" class="block py-2 hover:text-green-300">Home</a>
+                <a href="about.html" class="block py-2 hover:text-green-300">About</a>
+                <a href="destinations.html" class="block py-2 hover:text-green-300">Destinations</a>
+                <a href="packages.html" class="block py-2 text-green-300 font-semibold">Packages</a>
+                <a href="contact.html" class="block py-2 hover:text-green-300">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-green-600 to-blue-600 text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-5xl font-bold mb-6">Tour Packages</h1>
+            <p class="text-xl max-w-3xl mx-auto">Carefully crafted eco-friendly tour packages for every type of traveler</p>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="py-8 bg-white shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="flex gap-4">
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option>All Durations</option>
+                        <option>1-3 Days</option>
+                        <option>4-7 Days</option>
+                        <option>8-14 Days</option>
+                        <option>15+ Days</option>
+                    </select>
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option>All Budgets</option>
+                        <option>Under $500</option>
+                        <option>$500 - $1000</option>
+                        <option>$1000 - $2000</option>
+                        <option>$2000+</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600">Sort by:</span>
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Duration</option>
+                        <option>Popularity</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Packages Grid -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Package Card 1 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="h-48 bg-gradient-to-r from-green-400 to-blue-500 relative">
+                        <div class="absolute top-4 left-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            Popular
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white px-2 py-1 rounded-full text-sm font-semibold text-gray-800">
+                            5 Days
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Cultural Triangle Explorer</h3>
+                        <p class="text-gray-600 mb-4">Discover ancient kingdoms and UNESCO World Heritage sites including Sigiriya, Polonnaruwa, and Dambulla.</p>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">Destinations Included:</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Sigiriya Rock Fortress</li>
+                                <li>• Dambulla Cave Temple</li>
+                                <li>• Polonnaruwa Ancient City</li>
+                                <li>• Minneriya National Park</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="border-t pt-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <span class="text-2xl font-bold text-green-600">$450</span>
+                                    <span class="text-gray-500 text-sm">per person</span>
+                                </div>
+                                <div class="flex items-center text-yellow-500">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-2 text-gray-600 text-sm">(4.8)</span>
+                                </div>
+                            </div>
+                            <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition duration-300">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package Card 2 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="h-48 bg-gradient-to-r from-blue-400 to-purple-500 relative">
+                        <div class="absolute top-4 right-4 bg-white px-2 py-1 rounded-full text-sm font-semibold text-gray-800">
+                            7 Days
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Hill Country Adventure</h3>
+                        <p class="text-gray-600 mb-4">Experience the cool climate and stunning landscapes of Sri Lanka's central highlands with tea plantations and waterfalls.</p>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">Destinations Included:</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Kandy Temple & Lake</li>
+                                <li>• Ella Tea Country</li>
+                                <li>• Nuwara Eliya</li>
+                                <li>• Horton Plains National Park</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="border-t pt-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <span class="text-2xl font-bold text-green-600">$620</span>
+                                    <span class="text-gray-500 text-sm">per person</span>
+                                </div>
+                                <div class="flex items-center text-yellow-500">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-2 text-gray-600 text-sm">(4.9)</span>
+                                </div>
+                            </div>
+                            <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition duration-300">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package Card 3 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="h-48 bg-gradient-to-r from-yellow-400 to-orange-500 relative">
+                        <div class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            Best Value
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white px-2 py-1 rounded-full text-sm font-semibold text-gray-800">
+                            3 Days
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Wildlife Safari Experience</h3>
+                        <p class="text-gray-600 mb-4">Thrilling wildlife encounters in Sri Lanka's premier national parks with expert naturalist guides.</p>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">Destinations Included:</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Yala National Park</li>
+                                <li>• Udawalawe National Park</li>
+                                <li>• Elephant Transit Home</li>
+                                <li>• Bundala Bird Sanctuary</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="border-t pt-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <span class="text-2xl font-bold text-green-600">$320</span>
+                                    <span class="text-gray-500 text-sm">per person</span>
+                                </div>
+                                <div class="flex items-center text-yellow-500">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-2 text-gray-600 text-sm">(4.7)</span>
+                                </div>
+                            </div>
+                            <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition duration-300">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package Card 4 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="h-48 bg-gradient-to-r from-teal-400 to-blue-500 relative">
+                        <div class="absolute top-4 right-4 bg-white px-2 py-1 rounded-full text-sm font-semibold text-gray-800">
+                            4 Days
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Southern Coast Paradise</h3>
+                        <p class="text-gray-600 mb-4">Pristine beaches, whale watching, and coastal adventures along Sri Lanka's stunning southern coastline.</p>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">Destinations Included:</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Mirissa Beach</li>
+                                <li>• Galle Fort</li>
+                                <li>• Unawatuna Bay</li>
+                                <li>• Whale Watching Tours</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="border-t pt-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <span class="text-2xl font-bold text-green-600">$380</span>
+                                    <span class="text-gray-500 text-sm">per person</span>
+                                </div>
+                                <div class="flex items-center text-yellow-500">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-2 text-gray-600 text-sm">(4.6)</span>
+                                </div>
+                            </div>
+                            <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition duration-300">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package Card 5 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="h-48 bg-gradient-to-r from-purple-400 to-pink-500 relative">
+                        <div class="absolute top-4 left-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            Premium
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white px-2 py-1 rounded-full text-sm font-semibold text-gray-800">
+                            10 Days
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Complete Sri Lanka Experience</h3>
+                        <p class="text-gray-600 mb-4">Comprehensive tour covering cultural sites, wildlife, beaches, and hill country in one amazing journey.</p>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">Destinations Included:</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• All Cultural Triangle sites</li>
+                                <li>• Kandy & Ella Hill Country</li>
+                                <li>• Yala National Park</li>
+                                <li>• Southern beaches</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="border-t pt-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <span class="text-2xl font-bold text-green-600">$1,250</span>
+                                    <span class="text-gray-500 text-sm">per person</span>
+                                </div>
+                                <div class="flex items-center text-yellow-500">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-2 text-gray-600 text-sm">(4.9)</span>
+                                </div>
+                            </div>
+                            <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition duration-300">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package Card 6 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="h-48 bg-gradient-to-r from-indigo-400 to-purple-500 relative">
+                        <div class="absolute top-4 right-4 bg-white px-2 py-1 rounded-full text-sm font-semibold text-gray-800">
+                            6 Days
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Adventure & Wellness Retreat</h3>
+                        <p class="text-gray-600 mb-4">Perfect blend of adventure activities and wellness experiences in Sri Lanka's most scenic locations.</p>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">Destinations Included:</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Ella hiking trails</li>
+                                <li>• Ayurveda spa treatments</li>
+                                <li>• White water rafting</li>
+                                <li>• Meditation retreats</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="border-t pt-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <span class="text-2xl font-bold text-green-600">$720</span>
+                                    <span class="text-gray-500 text-sm">per person</span>
+                                </div>
+                                <div class="flex items-center text-yellow-500">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-2 text-gray-600 text-sm">(4.8)</span>
+                                </div>
+                            </div>
+                            <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition duration-300">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="text-center mt-12">
+                <button class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300">
+                    Load More Packages
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-green-600 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-4">Can't Find What You're Looking For?</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">We create custom packages tailored to your interests, budget, and schedule.</p>
+            <a href="contact.html" class="bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-semibold transition duration-300">
+                Request Custom Package
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-leaf text-2xl text-green-400"></i>
+                        <h3 class="text-xl font-bold">Ceylon ECO Journeys</h3>
+                    </div>
+                    <p class="text-gray-400">Sustainable tourism experiences in beautiful Sri Lanka.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="about.html" class="text-gray-400 hover:text-white">About Us</a></li>
+                        <li><a href="destinations.html" class="text-gray-400 hover:text-white">Destinations</a></li>
+                        <li><a href="packages.html" class="text-gray-400 hover:text-white">Packages</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-phone mr-2"></i> +94 11 234 5678</li>
+                        <li><i class="fas fa-envelope mr-2"></i> info@ceylonecotourism.com</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i> Colombo, Sri Lanka</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Ceylon ECO Journeys. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

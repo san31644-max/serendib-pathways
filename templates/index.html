@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ceylon ECO Journeys - Discover Sri Lanka's Natural Beauty</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-green-800 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-leaf text-2xl text-green-300"></i>
+                    <h1 class="text-2xl font-bold">Ceylon ECO Journeys</h1>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="index.html" class="hover:text-green-300 transition duration-300">Home</a>
+                    <a href="about.html" class="hover:text-green-300 transition duration-300">About</a>
+                    <a href="destinations.html" class="hover:text-green-300 transition duration-300">Destinations</a>
+                    <a href="packages.html" class="hover:text-green-300 transition duration-300">Packages</a>
+                    <a href="contact.html" class="hover:text-green-300 transition duration-300">Contact Us</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-white">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                <a href="index.html" class="block py-2 hover:text-green-300">Home</a>
+                <a href="about.html" class="block py-2 hover:text-green-300">About</a>
+                <a href="destinations.html" class="block py-2 hover:text-green-300">Destinations</a>
+                <a href="packages.html" class="block py-2 hover:text-green-300">Packages</a>
+                <a href="contact.html" class="block py-2 hover:text-green-300">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-r from-green-600 to-blue-600 text-white">
+        <div class="absolute inset-0 bg-black opacity-40"></div>
+        <div class="relative container mx-auto px-4 py-32 text-center">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6">Discover Sri Lanka's Natural Wonders</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Experience sustainable tourism in the pearl of the Indian Ocean. Explore pristine beaches, ancient temples, and lush tea plantations.</p>
+            <div class="space-x-4">
+                <a href="packages.html" class="bg-green-600 hover:bg-green-700 px-8 py-3 rounded-lg text-lg font-semibold transition duration-300">View Packages</a>
+                <a href="destinations.html" class="border-2 border-white hover:bg-white hover:text-green-600 px-8 py-3 rounded-lg text-lg font-semibold transition duration-300">Explore Destinations</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Why Choose Ceylon ECO Journeys?</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">We're committed to sustainable tourism that preserves Sri Lanka's natural beauty for future generations.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center p-6">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-leaf text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Eco-Friendly</h3>
+                    <p class="text-gray-600">All our tours are designed to minimize environmental impact while maximizing your experience.</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Local Guides</h3>
+                    <p class="text-gray-600">Expert local guides who know the hidden gems and cultural significance of each destination.</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-star text-yellow-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Premium Experience</h3>
+                    <p class="text-gray-600">Carefully curated experiences that showcase the best of Sri Lankan culture and nature.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Destinations -->
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Featured Destinations</h2>
+                <p class="text-xl text-gray-600">Discover the most breathtaking locations in Sri Lanka</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-r from-green-400 to-blue-500"></div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Sigiriya Rock Fortress</h3>
+                        <p class="text-gray-600 mb-4">Ancient rock fortress with stunning frescoes and panoramic views.</p>
+                        <a href="destinations.html" class="text-green-600 hover:text-green-800 font-semibold">Learn More →</a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-r from-blue-400 to-purple-500"></div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Ella Tea Country</h3>
+                        <p class="text-gray-600 mb-4">Rolling hills covered in tea plantations with breathtaking mountain views.</p>
+                        <a href="destinations.html" class="text-green-600 hover:text-green-800 font-semibold">Learn More →</a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-r from-yellow-400 to-orange-500"></div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Yala National Park</h3>
+                        <p class="text-gray-600 mb-4">Wildlife sanctuary home to leopards, elephants, and exotic birds.</p>
+                        <a href="destinations.html" class="text-green-600 hover:text-green-800 font-semibold">Learn More →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-green-600 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-4">Ready to Explore Sri Lanka?</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Join us for an unforgettable eco-friendly adventure through the beautiful landscapes of Ceylon.</p>
+            <a href="contact.html" class="bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-semibold transition duration-300">Get Started Today</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-leaf text-2xl text-green-400"></i>
+                        <h3 class="text-xl font-bold">Ceylon ECO Journeys</h3>
+                    </div>
+                    <p class="text-gray-400">Sustainable tourism experiences in beautiful Sri Lanka.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="about.html" class="text-gray-400 hover:text-white">About Us</a></li>
+                        <li><a href="destinations.html" class="text-gray-400 hover:text-white">Destinations</a></li>
+                        <li><a href="packages.html" class="text-gray-400 hover:text-white">Packages</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-phone mr-2"></i> +94 11 234 5678</li>
+                        <li><i class="fas fa-envelope mr-2"></i> info@ceylonecotourism.com</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i> Colombo, Sri Lanka</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Ceylon ECO Journeys. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
