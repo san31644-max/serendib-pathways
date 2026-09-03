@@ -26,6 +26,7 @@ include 'includes/header.php';
         <div class="relative w-full aspect-[10/15] md:aspect-[16/9] overflow-hidden">
             <!-- Video Background -->
             <video
+                id="hero-video"
                 autoplay
                 loop
                 muted
@@ -38,6 +39,11 @@ include 'includes/header.php';
             
             <!-- Background overlay -->
             <div class="absolute inset-0 bg-black opacity-40"></div>
+
+            <button class="hero-sound-toggle" id="hero-sound-toggle" type="button" aria-label="Play video sound" aria-pressed="false">
+                <i class="fa-solid fa-volume-xmark" aria-hidden="true"></i>
+                <span>Play sound</span>
+            </button>
             
             <!-- Content container - bottom left on mobile, centered on desktop -->
             <div class="absolute inset-0 flex items-end md:items-center justify-start md:justify-center">

@@ -7,4 +7,4 @@
     <form class="ai-chat-form" id="ai-chat-form"><label class="sr-only" for="ai-chat-input">Your message</label><textarea id="ai-chat-input" maxlength="2000" rows="1" placeholder="Ask me anything…" required></textarea><button type="submit" aria-label="Send message"><i class="fa-solid fa-paper-plane"></i></button></form>
     <p class="ai-chat-note">AI responses can be inaccurate. Confirm important travel details.</p>
 </section>
-<script src="assets/js/script.js?v=6"></script></body></html>
+<script src="assets/js/script.js?v=7"></script></body></html>
