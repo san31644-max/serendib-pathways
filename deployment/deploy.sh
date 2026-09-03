@@ -15,7 +15,7 @@ if [[ "$current_commit" == "$remote_commit" ]]; then
 fi
 
 git reset --hard --quiet origin/main
-rsync -a --delete \
+rsync -a \
   --exclude='.git/' \
   --exclude='.github/' \
   --exclude='config/database.php' \
