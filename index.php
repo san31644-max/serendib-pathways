@@ -17,6 +17,31 @@ $stmt = $db->prepare($query);
 $stmt->execute();
 $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$ranking_blueprint = [
+    ['Sigiriya', 'History & iconic views'],
+    ['Ella', 'Mountains & nature'],
+    ['Kandy', 'Culture & heritage'],
+    ['Galle', 'Fort & coastal history'],
+    ['Yala', 'Wildlife safari'],
+    ['Nuwara Eliya', 'Tea country'],
+    ['Mirissa', 'Beach & whale watching'],
+    ['Bentota', 'Beach & water activities'],
+    ['Anuradhapura', 'Ancient civilization'],
+    ['Trincomalee', 'East coast beaches'],
+];
+$ranked_destinations = [];
+$rank_stmt = $db->prepare('SELECT id,name,image,location FROM destinations WHERE name=? ORDER BY id LIMIT 1');
+foreach ($ranking_blueprint as $index => [$name, $experience]) {
+    $rank_stmt->execute([$name]);
+    $place = $rank_stmt->fetch(PDO::FETCH_ASSOC);
+    if ($place) {
+        $place['rank'] = $index + 1;
+        $place['experience'] = $experience;
+        if ($name === 'Trincomalee') $place['display_name'] = 'Trincomalee / Nilaveli';
+        $ranked_destinations[] = $place;
+    }
+}
+$extra_stylesheet = 'assets/css/home-ranking.css?v=1';
 include 'includes/header.php';
 ?>
 
@@ -143,6 +168,41 @@ include 'includes/header.php';
                  class="w-full h-full object-cover hover:scale-105 active:scale-98 transition-transform duration-300"
                  loading="lazy">
         </div>
+    </div>
+</section>
+
+<!-- Signature Destination Ranking -->
+<section class="home-ranking" aria-labelledby="ranking-title">
+    <div class="catalog-shell">
+        <div class="ranking-heading">
+            <div><span class="ranking-kicker"><i></i> THE SERENDIB TEN</span><h2 id="ranking-title">Ten places.<br><em>One unforgettable island.</em></h2></div>
+            <p>Our essential Sri Lanka collection—ranked by the experience each place delivers at its very best.</p>
+        </div>
+
+        <div class="ranking-podium">
+            <?php foreach (array_slice($ranked_destinations, 0, 3) as $place): ?>
+            <a class="ranking-hero ranking-hero--<?= (int) $place['rank'] ?>" href="destination-detail.php?id=<?= (int) $place['id'] ?>">
+                <img src="<?= htmlspecialchars($place['image']) ?>" alt="<?= htmlspecialchars($place['name']) ?>" loading="lazy">
+                <span class="ranking-hero__veil"></span>
+                <span class="ranking-medal"><?= ['🥇','🥈','🥉'][$place['rank'] - 1] ?></span>
+                <span class="ranking-hero__content"><small>NO. 0<?= (int) $place['rank'] ?> · <?= htmlspecialchars($place['experience']) ?></small><strong><?= htmlspecialchars($place['name']) ?></strong><b>Explore <i class="fas fa-arrow-right"></i></b></span>
+            </a>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="ranking-list">
+            <?php foreach (array_slice($ranked_destinations, 3) as $place): ?>
+            <a class="ranking-row" href="destination-detail.php?id=<?= (int) $place['id'] ?>">
+                <span class="ranking-row__number"><?= str_pad((string) $place['rank'], 2, '0', STR_PAD_LEFT) ?></span>
+                <span class="ranking-row__photo"><img src="<?= htmlspecialchars($place['image']) ?>" alt="" loading="lazy"></span>
+                <span class="ranking-row__name"><strong><?= htmlspecialchars($place['display_name'] ?? $place['name']) ?></strong><small><?= htmlspecialchars($place['location'] ?: 'Sri Lanka') ?></small></span>
+                <span class="ranking-row__experience"><?= htmlspecialchars($place['experience']) ?></span>
+                <i class="fas fa-arrow-up-right-from-square"></i>
+            </a>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="ranking-footer"><span>01—10 · Curated by Serendib Pathways</span><a href="destinations.php">Explore all destinations <i class="fas fa-arrow-right"></i></a></div>
     </div>
 </section>
 
