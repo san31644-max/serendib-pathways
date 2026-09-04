@@ -240,7 +240,7 @@ include 'includes/header.php';
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="team-card bg-white rounded-lg shadow-lg overflow-hidden text-center">
                     <div class="team-portrait">
-                        <img src="assets/images/team/jayanath-kularoosiya.jpg" alt="Jayanath Kulasooriya, Founder and CEO of Serendib Pathways" loading="lazy">
+                        <img src="assets/images/team/jayanath-kularoosiya.jpg" alt="Jayanath Kulasooriya, Founder and CEO of Serendib Pathways" loading="eager" decoding="async" style="object-position: center 38%;">
                     </div>
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2">Jayanath Kulasooriya</h3>
