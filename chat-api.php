@@ -159,35 +159,55 @@ if (!function_exists('curl_init')) {
     respond(500, ['error' => 'PHP cURL is required for the chatbot. Enable the curl extension in XAMPP.']);
 }
 
-$url = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode($model) . ':generateContent';
-$ch = curl_init($url);
-curl_setopt_array($ch, [
-    CURLOPT_POST => true,
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_CONNECTTIMEOUT => 10,
-    CURLOPT_TIMEOUT => 90,
-    CURLOPT_HTTPHEADER => [
-        'Content-Type: application/json',
-        'x-goog-api-key: ' . $apiKey,
-    ],
-    CURLOPT_POSTFIELDS => $payload,
-]);
+$models = array_values(array_unique([$model, 'gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-flash-latest']));
+$lastStatus = 0;
+$lastMessage = '';
+$networkFailed = false;
 
-$response = curl_exec($ch);
-$status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-$curlError = curl_error($ch);
-curl_close($ch);
+foreach ($models as $candidateModel) {
+    for ($attempt = 1; $attempt <= 2; $attempt++) {
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode($candidateModel) . ':generateContent';
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 90,
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'x-goog-api-key: ' . $apiKey],
+            CURLOPT_POSTFIELDS => $payload,
+        ]);
+        $response = curl_exec($ch);
+        $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
 
-if ($response === false || $curlError !== '') {
+        if ($response === false || $curlError !== '') {
+            $networkFailed = true;
+            $lastMessage = $curlError;
+            break;
+        }
+
+        $data = json_decode($response, true);
+        $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+        if ($status >= 200 && $status < 300 && is_string($reply) && trim($reply) !== '') {
+            respond(200, ['reply' => trim($reply), 'model' => $candidateModel]);
+        }
+
+        $lastStatus = $status;
+        $lastMessage = (string) ($data['error']['message'] ?? 'Unknown Gemini response');
+        error_log('Gemini API error for ' . $candidateModel . ' (' . $status . '): ' . $lastMessage);
+        if (!in_array($status, [429, 500, 502, 503, 504], true)) break;
+        if ($attempt === 1) usleep(450000);
+    }
+}
+
+if ($networkFailed && $lastStatus === 0) {
     respond(502, ['error' => 'I could not reach Gemini right now. Please try again shortly.']);
 }
-
-$data = json_decode($response, true);
-$reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
-if ($status < 200 || $status >= 300 || !is_string($reply) || trim($reply) === '') {
-    $apiMessage = $data['error']['message'] ?? '';
-    error_log('Gemini API error (' . $status . '): ' . $apiMessage);
-    respond(502, ['error' => 'Gemini could not answer that request. Check the API key and try again.']);
+if ($lastStatus === 429 || str_contains(strtolower($lastMessage), 'credit')) {
+    respond(503, ['error' => 'The AI assistant has reached its Gemini usage limit. Please try again later or contact us directly.']);
 }
-
-respond(200, ['reply' => trim($reply)]);
+if (in_array($lastStatus, [500, 502, 503, 504], true)) {
+    respond(503, ['error' => 'The AI assistant is temporarily busy. Please try again in a moment.']);
+}
+respond(502, ['error' => 'The Gemini connection needs attention. Please check the configured API key and model.']);
