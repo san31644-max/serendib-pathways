@@ -258,7 +258,7 @@ include 'includes/header.php';
                 </div>
                 <div class="team-card bg-white rounded-lg shadow-lg overflow-hidden text-center">
                     <div class="team-portrait">
-                        <img src="assets/images/team/mahesh-operations-manager.jpg" alt="Mahesh Fernando, Head of Operations at Serendib Pathways" loading="lazy">
+                        <img src="assets/images/team/mahesh-fernando.jpg" alt="Mahesh Fernando, Head of Operations at Serendib Pathways" loading="eager" decoding="async">
                     </div>
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2">Mahesh Fernando</h3>
