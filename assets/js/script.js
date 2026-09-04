@@ -13,6 +13,7 @@ heroSoundToggle?.addEventListener('click',async()=>{if(!heroVideo)return;heroVid
 
 const chatToggle=document.querySelector('#ai-chat-toggle'),chatPanel=document.querySelector('#ai-chat-panel'),chatClose=document.querySelector('#ai-chat-close'),chatForm=document.querySelector('#ai-chat-form'),chatInput=document.querySelector('#ai-chat-input'),chatMessages=document.querySelector('#ai-chat-messages');
 const chatHistory=[];
+let humanMode=false,humanToken=localStorage.getItem('serendibHumanChat')||'',humanLastMessage=0,humanPollTimer=null;
 const setChatOpen=open=>{if(!chatPanel)return;chatPanel.classList.toggle('open',open);chatPanel.setAttribute('aria-hidden',open?'false':'true');chatToggle?.setAttribute('aria-expanded',open?'true':'false');if(open)setTimeout(()=>chatInput?.focus(),150)};
 chatToggle?.addEventListener('click',()=>setChatOpen(!chatPanel?.classList.contains('open')));
 chatClose?.addEventListener('click',()=>setChatOpen(false));
@@ -25,10 +26,18 @@ const renderAssistantText=(el,text)=>{
   if(inList)html+='</ul>';el.innerHTML=html;
 };
 const addChatMessage=(text,role,extra='')=>{const el=document.createElement('div');el.className=`ai-message ${role} ${extra}`.trim();if(role==='assistant'&&extra!=='loading')renderAssistantText(el,text);else el.textContent=text;chatMessages?.appendChild(el);if(chatMessages)chatMessages.scrollTop=chatMessages.scrollHeight;return el};
+const humanStart=document.querySelector('#human-chat-start'),humanBanner=document.querySelector('#human-chat-banner'),humanState=document.querySelector('#human-chat-state'),humanExit=document.querySelector('#human-chat-exit'),assistantName=document.querySelector('#chat-assistant-name'),assistantStatus=document.querySelector('#chat-assistant-status');
+const humanCall=async data=>{const response=await fetch('human-chat-api.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||'Human chat is unavailable.');return result};
+const enterHumanMode=()=>{humanMode=true;humanBanner.hidden=false;assistantName.textContent='Travel team';assistantStatus.textContent='Human conversation';chatInput.placeholder='Message our travel specialist…';if(humanPollTimer)clearInterval(humanPollTimer);humanPollTimer=setInterval(pollHumanChat,3000);pollHumanChat()};
+const leaveHumanMode=()=>{humanMode=false;humanBanner.hidden=true;assistantName.textContent='Serendib Pathways Assistant';assistantStatus.textContent='Powered by Gemini';chatInput.placeholder='Ask me anything…';if(humanPollTimer){clearInterval(humanPollTimer);humanPollTimer=null}};
+const pollHumanChat=async()=>{if(!humanMode||!humanToken)return;try{const data=await humanCall({action:'poll',token:humanToken,after:humanLastMessage});data.messages.forEach(message=>{humanLastMessage=Math.max(humanLastMessage,+message.id);if(message.sender==='visitor')return;addChatMessage(message.message,'assistant',message.sender==='system'?'human-system':'human-agent');const last=chatMessages.lastElementChild;if(last&&message.sender==='agent'){const label=document.createElement('strong');label.className='human-sender';label.textContent=message.sender_name;last.prepend(label)}});humanState.textContent=data.status==='active'?`${data.agent_name||'A travel specialist'} is here`:(data.status==='closed'?'Conversation closed':'Waiting for a travel specialist…')}catch(error){humanState.textContent='Reconnecting to the travel team…'}};
+humanStart?.addEventListener('click',async()=>{try{if(!humanToken){const visitorName=prompt('What name should our travel specialist call you?','Guest')||'Guest';const data=await humanCall({action:'start',name:visitorName});humanToken=data.token;localStorage.setItem('serendibHumanChat',humanToken);humanLastMessage=0;chatMessages.innerHTML=''}enterHumanMode()}catch(error){addChatMessage(error.message,'assistant','error')}});
+humanExit?.addEventListener('click',leaveHumanMode);
 chatInput?.addEventListener('input',()=>{chatInput.style.height='auto';chatInput.style.height=Math.min(chatInput.scrollHeight,110)+'px'});
 chatInput?.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatForm?.requestSubmit()}});
 chatForm?.addEventListener('submit',async event=>{
   event.preventDefault();const message=chatInput.value.trim();if(!message)return;
+  if(humanMode){addChatMessage(message,'user');chatInput.value='';chatInput.style.height='auto';try{await humanCall({action:'send',token:humanToken,message})}catch(error){addChatMessage(error.message,'assistant','error')}return}
   const priorHistory=chatHistory.slice(-10);addChatMessage(message,'user');chatHistory.push({role:'user',text:message});chatInput.value='';chatInput.style.height='auto';
   const submit=chatForm.querySelector('button[type="submit"]');submit.disabled=true;chatInput.disabled=true;const waiting=addChatMessage('Thinking…','assistant','loading');
   try{const response=await fetch('chat-api.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,history:priorHistory})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Something went wrong.');waiting.remove();addChatMessage(data.reply,'assistant');chatHistory.push({role:'assistant',text:data.reply})}

@@ -153,6 +153,11 @@
                     <span class="font-medium">Messages</span>
                 </a>
             </li>
+            <li>
+                <a href="human-chats.php" class="nav-item flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-green-50 hover:text-green-600 transition duration-300 <?php echo basename($_SERVER['PHP_SELF']) == 'human-chats.php' ? 'bg-green-50 text-green-600 active' : ''; ?>">
+                    <i class="fas fa-headset text-lg"></i><span class="font-medium">Live Chats</span>
+                </a>
+            </li>
         </ul>
     </nav>
 
