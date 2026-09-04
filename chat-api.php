@@ -89,6 +89,49 @@ function liveWeatherReply(string $place): ?string
     return implode("\n", $lines);
 }
 
+function packagePlanReply(string $message): string
+{
+    preg_match('/\b(\d{1,2})\s*(?:days?|nights?)\b/i', $message, $match);
+    $days = max(3, min(21, (int) ($match[1] ?? 10)));
+    $lower = strtolower($message);
+    $wildlife = preg_match('/wildlife|safari|elephant|leopard/', $lower);
+    $beach = preg_match('/beach|coast|sea|surf|whale/', $lower);
+    $culture = preg_match('/culture|heritage|history|temple|ancient/', $lower);
+    $mountains = preg_match('/mountain|ella|tea|hike|highland|nature/', $lower);
+    if (!$wildlife && !$beach && !$culture && !$mountains) $wildlife = $beach = $culture = $mountains = true;
+
+    $route = [
+        ['Negombo', 'Airport welcome, an easy lagoon-side arrival and time to recover.'],
+        ['Sigiriya', 'Travel into the Cultural Triangle; explore Dambulla Cave Temple.' ],
+        ['Sigiriya', 'Early Lion Rock climb and a relaxed village or heritage afternoon.'],
+        ['Kandy', 'Scenic transfer, Temple of the Tooth and an evening cultural experience.'],
+        ['Nuwara Eliya', 'Tea country journey with an estate visit and cool highland scenery.'],
+        ['Ella', 'Iconic train country, Nine Arch Bridge and a gentle viewpoint walk.'],
+        ['Ella', 'Waterfalls, Little Adam’s Peak and an unhurried mountain afternoon.'],
+        [$wildlife ? 'Yala' : 'Galle', $wildlife ? 'Private afternoon safari focused on ethical wildlife viewing.' : 'Explore the UNESCO-listed fort and coastal history.'],
+        [$beach ? 'Mirissa' : 'Galle', $beach ? 'Southern beach time with optional responsible whale watching in season.' : 'Fort lanes, museums and an ocean sunset.'],
+        ['Galle / Colombo', 'A final coastal morning, then transfer toward Colombo or the airport.'],
+        ['Bentota', 'River, garden and beach experiences at a slower pace.'],
+        ['Colombo', 'Contemporary culture, food and a comfortable final night.'],
+    ];
+    if (!$culture) $route[1] = ['Habarana', 'Settle into a nature lodge beside reservoirs and forest.'];
+    if (!$mountains) array_splice($route, 4, 3, [['Kandy', 'Gardens, local cuisine and a relaxed cultural day.']]);
+    while (count($route) < $days) array_splice($route, -1, 0, [[$beach ? 'South Coast' : 'Hill Country', $beach ? 'A flexible beach day for rest and optional water activities.' : 'A flexible slow-travel day for local walks and viewpoints.']]);
+    $route = array_slice($route, 0, $days);
+
+    $lines = ["**Your {$days}-day Sri Lanka journey**", '', 'A balanced private route designed around your interests:', ''];
+    foreach ($route as $index => [$place, $activity]) $lines[] = '- **Day ' . ($index + 1) . " — {$place}:** {$activity}";
+    $lines[] = '';
+    $lines[] = '**Recommended style**';
+    $lines[] = '- Private air-conditioned vehicle with an English-speaking chauffeur-guide';
+    $lines[] = '- Carefully selected stays with breakfast';
+    $lines[] = '- Flexible starts and enough time between major experiences';
+    $lines[] = '- Safari, rail and attraction reservations confirmed separately';
+    $lines[] = '';
+    $lines[] = 'This is a planning outline, not a price or availability confirmation. Tell me your exact month, traveller count and hotel level, or use “Plan my trip” so the Serendib Pathways team can turn it into a quotation.';
+    return implode("\n", $lines);
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Allow: POST');
     respond(405, ['error' => 'Method not allowed.']);
@@ -135,6 +178,19 @@ if ($isWeather) {
     respond(200, ['reply' => $weatherReply, 'source' => 'open-meteo']);
 }
 
+$isPackageRequest = (bool) preg_match('/\b(?:plan|create|make|build|suggest)\b.{0,35}\b(?:package|trip|tour|itinerary|holiday|vacation)\b|\b(?:package|trip|tour|itinerary)\b.{0,35}\b(?:for me|plan)\b/iu', $message);
+$packageInHistory = false;
+foreach ($history as $historyItem) {
+    if (preg_match('/\b(?:package|trip|tour|itinerary|journey)\b/iu', (string) ($historyItem['text'] ?? ''))) { $packageInHistory = true; break; }
+}
+$hasDuration = (bool) preg_match('/\b\d{1,2}\s*(?:days?|nights?)\b/i', $message);
+if (!$history && $isPackageRequest && !$hasDuration) {
+    respond(200, ['reply' => "I’d love to design your Sri Lanka journey. Send me these details in one message:\n\n- Number of days\n- Travel month or dates\n- Number of travellers\n- Your favourites: beaches, wildlife, culture, mountains or adventure\n- Preferred pace: relaxed, balanced or active\n- Budget level: value, comfort or luxury\n- Arrival city, if known\n\nExample: “10 days in February for two people, balanced pace, comfort budget, with wildlife, Ella and beaches.”", 'source' => 'package-planner']);
+}
+if ($hasDuration && ($isPackageRequest || $packageInHistory || preg_match('/wildlife|beach|culture|heritage|mountain|ella|tea|safari/i', $message))) {
+    respond(200, ['reply' => packagePlanReply($message), 'source' => 'package-planner']);
+}
+
 if (!$apiKeys) {
     respond(503, ['error' => 'The chatbot is not configured yet. Add the Gemini API key in config/gemini.local.php.']);
 }
@@ -170,21 +226,25 @@ if (!function_exists('curl_init')) {
     respond(500, ['error' => 'PHP cURL is required for the chatbot. Enable the curl extension in XAMPP.']);
 }
 
-$models = array_values(array_unique([$model, 'gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-flash-latest']));
+$models = array_values(array_unique(['gemini-3.6-flash', $model, 'gemini-3.5-flash-lite', 'gemini-flash-latest']));
 $lastStatus = 0;
 $lastMessage = '';
 $networkFailed = false;
+$requestStarted = microtime(true);
+$requestBudgetSeconds = 48;
 
 foreach ($models as $candidateModel) {
     foreach ($apiKeys as $keyIndex => $candidateKey) {
         for ($attempt = 1; $attempt <= 1; $attempt++) {
+        $remainingSeconds = $requestBudgetSeconds - (microtime(true) - $requestStarted);
+        if ($remainingSeconds < 6) break 3;
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode($candidateModel) . ':generateContent';
         $ch = curl_init($url);
         curl_setopt_array($ch, [
             CURLOPT_POST => true,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_TIMEOUT => 90,
+            CURLOPT_CONNECTTIMEOUT => 6,
+            CURLOPT_TIMEOUT => (int) min(28, max(6, floor($remainingSeconds))),
             CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'x-goog-api-key: ' . $candidateKey],
             CURLOPT_POSTFIELDS => $payload,
         ]);
