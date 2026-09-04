@@ -42,34 +42,17 @@ if (empty($destinations)) {
 
 foreach ($destinations as $destination):
 ?>
-<div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-    <div class="h-48 bg-gradient-to-r from-green-400 to-blue-500 relative"
-         style="background-image: url('<?php echo htmlspecialchars($destination['image'] ?: '/placeholder.svg'); ?>'); background-size: cover; background-position: center;">
-        <div class="absolute top-4 right-4 bg-white px-2 py-1 rounded-full text-sm font-semibold text-green-600">
-            <?php echo htmlspecialchars($destination['category_name'] ?? 'Uncategorized'); ?>
-        </div>
+<a class="destination-card" href="destination-detail.php?id=<?php echo (int) $destination['id']; ?>">
+    <img src="<?php echo htmlspecialchars($destination['image'] ?: 'assets/about-6.jpg'); ?>" alt="<?php echo htmlspecialchars($destination['name']); ?>" loading="lazy">
+    <div class="destination-card__shade"></div>
+    <div class="destination-card__top"><span><?php echo htmlspecialchars($destination['category_name'] ?? 'Sri Lanka'); ?></span><b><?php echo str_pad((string) ($destination['id'] % 100), 2, '0', STR_PAD_LEFT); ?></b></div>
+    <div class="destination-card__content">
+        <small><i class="fas fa-location-dot"></i> <?php echo htmlspecialchars($destination['location'] ?: 'Sri Lanka'); ?></small>
+        <h3><?php echo htmlspecialchars($destination['name']); ?></h3>
+        <p><?php echo htmlspecialchars(mb_substr($destination['description'], 0, 118)) . '…'; ?></p>
+        <span class="destination-card__link">Discover this place <i class="fas fa-arrow-right"></i></span>
     </div>
-    <div class="p-6">
-        <h3 class="text-xl font-semibold mb-2"><?php echo htmlspecialchars($destination['name']); ?></h3>
-        <p class="text-gray-600 mb-4"><?php echo htmlspecialchars(substr($destination['description'], 0, 120)) . '...'; ?></p>
-
-        <?php if (!empty($destination['highlights'])): ?>
-            <div class="mb-4">
-                <h4 class="font-semibold text-gray-800 mb-2">Highlights:</h4>
-                <p class="text-sm text-gray-600"><?php echo htmlspecialchars(substr($destination['highlights'], 0, 100)) . '...'; ?></p>
-            </div>
-        <?php endif; ?>
-
-        <div class="flex items-center justify-between">
-            <div class="text-sm text-gray-600">
-                <p><strong>Category:</strong> <?php echo htmlspecialchars($destination['category_name'] ?? 'Uncategorized'); ?></p>
-            </div>
-            <a href="destination-detail.php?id=<?php echo $destination['id']; ?>" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-300">
-                View Details
-            </a>
-        </div>
-    </div>
-</div>
+</a>
 <?php
 endforeach;
 ?>

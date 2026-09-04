@@ -19,30 +19,31 @@ $stmt = $db->prepare($query);
 $stmt->execute();
 $destinations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$extra_stylesheet = 'assets/css/destinations-showcase.css?v=1';
 include 'includes/header.php';
 ?>
 
 <!-- Hero Section -->
-<section class="relative bg-cover bg-center bg-no-repeat text-white py-20" style="background-image: url('assets/about-6.jpg');">
-    <div class="absolute inset-0 bg-gradient-to-r from-green-800 via-green-600 to-blue-600 opacity-30"></div>
-    <div class="relative container mx-auto px-4 text-center">
-        <h1 class="text-5xl font-bold mb-6">Explore Our Destinations</h1>
-        <p class="text-xl max-w-3xl mx-auto">Discover the most beautiful and culturally rich locations across Sri Lanka</p>
+<section class="destinations-hero" style="--hero-image:url('assets/about-6.jpg')">
+    <div class="destinations-hero__veil"></div>
+    <div class="catalog-shell destinations-hero__content">
+        <span class="destinations-hero__eyebrow"><i></i> The island, revealed</span>
+        <h1>Find your<br><em>Sri Lanka.</em></h1>
+        <p>Sacred cities, mist-wrapped highlands and shores shaped by the Indian Ocean—choose the place that calls you.</p>
+        <a href="#discover-destinations">Begin exploring <i class="fas fa-arrow-down"></i></a>
     </div>
 </section>
 
 <!-- Search and Category Filter -->
-<section class="py-8 bg-white shadow-sm">
-    <div class="container mx-auto px-4">
-        <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div class="flex-1 max-w-md">
-                <div class="relative">
-                    <input type="text" id="searchInput" placeholder="Search destinations..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+<section class="destination-discovery-bar" id="discover-destinations">
+    <div class="catalog-shell">
+        <div class="destination-search-row">
+            <div class="destination-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Where would you like to go?" aria-label="Search destinations">
+                    <span>SEARCH</span>
                 </div>
-            </div>
-            <div class="flex gap-4">
-                <select id="categoryFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                <select id="categoryFilter" class="destination-category" aria-label="Filter by category">
                     <option value="">All Categories</option>
                     <?php foreach ($categories as $category): ?>
                         <option value="<?php echo htmlspecialchars($category['category_id']); ?>">
@@ -52,47 +53,30 @@ include 'includes/header.php';
                 </select>
             </div>
         </div>
-    </div>
 </section>
 
 <!-- Destinations Grid -->
-<section class="py-16 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <div id="destinationsGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+<section class="destinations-collection">
+    <div class="catalog-shell">
+        <div class="destinations-intro"><div><span>CURATED ACROSS THE ISLAND</span><h2>Places worth<br><em>feeling.</em></h2></div><p>Every destination opens into a full visual story, local context and thoughtful ways to experience it.</p></div>
+        <div id="destinationsGrid" class="destination-card-grid">
             <?php
             if (empty($destinations)):
                 echo '<p class="text-center text-gray-600 col-span-full">No destinations found.</p>';
             else:
                 foreach ($destinations as $destination):
             ?>
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                <div class="h-48 bg-gradient-to-r from-green-400 to-blue-500 relative" 
-                     style="background-image: url('<?php echo htmlspecialchars($destination['image'] ?: '/placeholder.svg'); ?>'); background-size: cover; background-position: center;">
-                    <div class="absolute top-4 right-4 bg-white px-2 py-1 rounded-full text-sm font-semibold text-green-600">
-                        <?php echo htmlspecialchars($destination['category_name'] ?? 'Uncategorized'); ?>
-                    </div>
+            <a class="destination-card" href="destination-detail.php?id=<?php echo (int) $destination['id']; ?>">
+                <img src="<?php echo htmlspecialchars($destination['image'] ?: 'assets/about-6.jpg'); ?>" alt="<?php echo htmlspecialchars($destination['name']); ?>" loading="lazy">
+                <div class="destination-card__shade"></div>
+                <div class="destination-card__top"><span><?php echo htmlspecialchars($destination['category_name'] ?? 'Sri Lanka'); ?></span><b><?php echo str_pad((string) ($destination['id'] % 100), 2, '0', STR_PAD_LEFT); ?></b></div>
+                <div class="destination-card__content">
+                    <small><i class="fas fa-location-dot"></i> <?php echo htmlspecialchars($destination['location'] ?: 'Sri Lanka'); ?></small>
+                    <h3><?php echo htmlspecialchars($destination['name']); ?></h3>
+                    <p><?php echo htmlspecialchars(mb_substr($destination['description'], 0, 118)) . '…'; ?></p>
+                    <span class="destination-card__link">Discover this place <i class="fas fa-arrow-right"></i></span>
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold mb-2"><?php echo htmlspecialchars($destination['name']); ?></h3>
-                    <p class="text-gray-600 mb-4"><?php echo htmlspecialchars(substr($destination['description'], 0, 120)) . '...'; ?></p>
-
-                    <?php if (!empty($destination['highlights'])): ?>
-                        <div class="mb-4">
-                            <h4 class="font-semibold text-gray-800 mb-2">Highlights:</h4>
-                            <p class="text-sm text-gray-600"><?php echo htmlspecialchars(substr($destination['highlights'], 0, 100)) . '...'; ?></p>
-                        </div>
-                    <?php endif; ?>
-
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-600">
-                            <p><strong>Category:</strong> <?php echo htmlspecialchars($destination['category_name'] ?? 'Uncategorized'); ?></p>
-                        </div>
-                        <a href="destination-detail.php?id=<?php echo $destination['id']; ?>" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-300">
-                            View Details
-                        </a>
-                    </div>
-                </div>
-            </div>
+            </a>
             <?php
                 endforeach;
             endif;
