@@ -258,11 +258,11 @@ include 'includes/header.php';
                 </div>
                 <div class="team-card bg-white rounded-lg shadow-lg overflow-hidden text-center">
                     <div class="team-portrait">
-                        <img src="assets/images/team/mahesh-operations-manager.jpg" alt="Mahesh Fernando, Operations Manager at Serendib Pathways" loading="lazy">
+                        <img src="assets/images/team/mahesh-operations-manager.jpg" alt="Mahesh Fernando, Head of Operations at Serendib Pathways" loading="lazy">
                     </div>
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2">Mahesh Fernando</h3>
-                        <p class="text-green-600 mb-3">Operations Manager</p>
+                        <p class="text-green-600 mb-3">Head of Operations</p>
                         <p class="text-gray-600 text-sm">Overseeing tour operations and exceptional guest experiences.</p>
                     </div>
                 </div>
