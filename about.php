@@ -54,6 +54,43 @@ include 'includes/header.php';
   .trapezoid-content {
     padding: 2rem;
   }
+
+  .team-portrait {
+    position: relative;
+    height: 19rem;
+    overflow: hidden;
+    background: linear-gradient(145deg, #0d4c3c, #c9a74d);
+  }
+
+  .team-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 28%;
+    transition: transform .7s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .team-portrait::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 38%;
+    background: linear-gradient(transparent, rgba(5,45,35,.5));
+    pointer-events: none;
+  }
+
+  .team-card {
+    transition: transform .35s ease, box-shadow .35s ease;
+  }
+
+  .team-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 55px rgba(16, 55, 43, .16);
+  }
+
+  .team-card:hover .team-portrait img {
+    transform: scale(1.045);
+  }
   
   @media (max-width: 768px) {
     .hero-image {
@@ -201,27 +238,31 @@ include 'includes/header.php';
                 <p class="text-xl text-gray-600">The passionate people behind your unforgettable experiences</p>
             </div>
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden text-center">
-                    <div class="h-64 bg-gradient-to-br from-green-400 to-blue-500"></div>
+                <div class="team-card bg-white rounded-lg shadow-lg overflow-hidden text-center">
+                    <div class="team-portrait">
+                        <img src="assets/images/team/jayanath-kularoosiya.jpg" alt="Jayanath Kulasooriya, Founder and CEO of Serendib Pathways" loading="lazy">
+                    </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2">Jayanath Kularoosiya</h3>
+                        <h3 class="text-xl font-semibold mb-2">Jayanath Kulasooriya</h3>
                         <p class="text-green-600 mb-3">Founder & CEO</p>
                         <p class="text-gray-600 text-sm">Founder and strategic leader of Serendib Pathways.</p>
                     </div>
                 </div>
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden text-center">
+                <div class="team-card bg-white rounded-lg shadow-lg overflow-hidden text-center">
                     <div class="h-64 bg-gradient-to-br from-blue-400 to-purple-500"></div>
                     <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2">Sandauru Dinusha</h3>
+                        <h3 class="text-xl font-semibold mb-2">Sandaru Dinusha</h3>
                         <p class="text-green-600 mb-3">Head of Operations</p>
                         <p class="text-gray-600 text-sm">Leading daily operations and creating seamless journeys across Sri Lanka.</p>
                     </div>
                 </div>
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden text-center">
-                    <div class="h-64 bg-gradient-to-br from-yellow-400 to-orange-500"></div>
+                <div class="team-card bg-white rounded-lg shadow-lg overflow-hidden text-center">
+                    <div class="team-portrait">
+                        <img src="assets/images/team/mahesh-operations-manager.jpg" alt="Mahesh Fernando, Operations Manager at Serendib Pathways" loading="lazy">
+                    </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2">Mahesh</h3>
-                        <p class="text-green-600 mb-3">Head of Operations</p>
+                        <h3 class="text-xl font-semibold mb-2">Mahesh Fernando</h3>
+                        <p class="text-green-600 mb-3">Operations Manager</p>
                         <p class="text-gray-600 text-sm">Overseeing tour operations and exceptional guest experiences.</p>
                     </div>
                 </div>
