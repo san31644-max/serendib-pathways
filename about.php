@@ -249,7 +249,9 @@ include 'includes/header.php';
                     </div>
                 </div>
                 <div class="team-card bg-white rounded-lg shadow-lg overflow-hidden text-center">
-                    <div class="h-64 bg-gradient-to-br from-blue-400 to-purple-500"></div>
+                    <div class="team-portrait">
+                        <img src="assets/images/team/sandaru-dinusha.png" alt="Sandaru Dinusha, Head of Operations at Serendib Pathways" loading="eager" decoding="async">
+                    </div>
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2">Sandaru Dinusha</h3>
                         <p class="text-green-600 mb-3">Head of Operations</p>
