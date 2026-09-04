@@ -250,7 +250,7 @@ include 'includes/header.php';
                 </div>
                 <div class="team-card bg-white rounded-lg shadow-lg overflow-hidden text-center">
                     <div class="team-portrait">
-                        <img src="assets/images/team/sandaru-dinusha.png" alt="Sandaru Dinusha, Head of Operations at Serendib Pathways" loading="eager" decoding="async">
+                        <img src="assets/images/team/sandaru-dinusha.png" alt="Sandaru Dinusha, Head of Operations at Serendib Pathways" loading="eager" decoding="async" style="object-position: center 8%;">
                     </div>
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2">Sandaru Dinusha</h3>
