@@ -20,7 +20,7 @@ $stmt->execute();
 $destinations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $extra_stylesheet = 'assets/css/destinations-showcase.css?v=2';
-$extra_stylesheet_secondary = 'assets/css/destinations-visibility.css?v=1';
+$extra_stylesheet_secondary = 'assets/css/destinations-visibility.css?v=2';
 include 'includes/header.php';
 ?>
 

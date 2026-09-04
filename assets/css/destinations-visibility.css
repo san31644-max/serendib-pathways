@@ -23,3 +23,11 @@
         min-height: 480px;
     }
 }
+.destinations-hero.reveal,
+.destination-discovery-bar.reveal,
+.destinations-collection.reveal,
+main .destination-card.reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+}
