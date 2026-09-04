@@ -1,0 +1,25 @@
+.destination-card {
+    min-height: 520px;
+    background: #173f32;
+}
+
+.destination-card img {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+}
+
+.destination-card .destination-card__content {
+    transform: none;
+}
+
+.destination-card .destination-card__content p,
+.destination-card .destination-card__link {
+    opacity: 1;
+}
+
+@media (max-width: 700px) {
+    .destination-card {
+        min-height: 480px;
+    }
+}

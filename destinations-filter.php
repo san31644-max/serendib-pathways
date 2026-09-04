@@ -43,7 +43,7 @@ if (empty($destinations)) {
 foreach ($destinations as $destination):
 ?>
 <a class="destination-card" href="destination-detail.php?id=<?php echo (int) $destination['id']; ?>">
-    <img src="<?php echo htmlspecialchars($destination['image'] ?: 'assets/about-6.jpg'); ?>" alt="<?php echo htmlspecialchars($destination['name']); ?>" loading="lazy">
+    <img src="<?php echo htmlspecialchars($destination['image'] ?: 'assets/about-6.jpg'); ?>" alt="<?php echo htmlspecialchars($destination['name']); ?>">
     <div class="destination-card__shade"></div>
     <div class="destination-card__top"><span><?php echo htmlspecialchars($destination['category_name'] ?? 'Sri Lanka'); ?></span><b><?php echo str_pad((string) ($destination['id'] % 100), 2, '0', STR_PAD_LEFT); ?></b></div>
     <div class="destination-card__content">
