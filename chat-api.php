@@ -96,7 +96,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $configFile = __DIR__ . '/config/gemini.local.php';
 $config = is_file($configFile) ? require $configFile : [];
-$apiKey = (string) (($config['api_key'] ?? '') ?: getenv('GEMINI_API_KEY'));
+$apiKeys = [];
+foreach ($config as $keyName => $keyValue) {
+    if ($keyName === 'model') continue;
+    $values = is_array($keyValue) ? $keyValue : [$keyValue];
+    foreach ($values as $value) {
+        $value = trim((string) $value);
+        if ($value !== '' && $value !== 'PASTE_YOUR_GEMINI_API_KEY_HERE') $apiKeys[] = $value;
+    }
+}
+$environmentKey = trim((string) getenv('GEMINI_API_KEY'));
+if ($environmentKey !== '') $apiKeys[] = $environmentKey;
+$apiKeys = array_values(array_unique($apiKeys));
 $model = (string) ($config['model'] ?? 'gemini-2.5-flash');
 
 $raw = file_get_contents('php://input');
@@ -124,7 +135,7 @@ if ($isWeather) {
     respond(200, ['reply' => $weatherReply, 'source' => 'open-meteo']);
 }
 
-if ($apiKey === '' || $apiKey === 'PASTE_YOUR_GEMINI_API_KEY_HERE') {
+if (!$apiKeys) {
     respond(503, ['error' => 'The chatbot is not configured yet. Add the Gemini API key in config/gemini.local.php.']);
 }
 
@@ -165,7 +176,8 @@ $lastMessage = '';
 $networkFailed = false;
 
 foreach ($models as $candidateModel) {
-    for ($attempt = 1; $attempt <= 2; $attempt++) {
+    foreach ($apiKeys as $keyIndex => $candidateKey) {
+        for ($attempt = 1; $attempt <= 1; $attempt++) {
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode($candidateModel) . ':generateContent';
         $ch = curl_init($url);
         curl_setopt_array($ch, [
@@ -173,7 +185,7 @@ foreach ($models as $candidateModel) {
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_TIMEOUT => 90,
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'x-goog-api-key: ' . $apiKey],
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'x-goog-api-key: ' . $candidateKey],
             CURLOPT_POSTFIELDS => $payload,
         ]);
         $response = curl_exec($ch);
@@ -190,14 +202,15 @@ foreach ($models as $candidateModel) {
         $data = json_decode($response, true);
         $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
         if ($status >= 200 && $status < 300 && is_string($reply) && trim($reply) !== '') {
-            respond(200, ['reply' => trim($reply), 'model' => $candidateModel]);
+            respond(200, ['reply' => trim($reply), 'model' => $candidateModel, 'key_slot' => $keyIndex + 1]);
         }
 
         $lastStatus = $status;
         $lastMessage = (string) ($data['error']['message'] ?? 'Unknown Gemini response');
-        error_log('Gemini API error for ' . $candidateModel . ' (' . $status . '): ' . $lastMessage);
+        error_log('Gemini API error for ' . $candidateModel . ' using key ' . ($keyIndex + 1) . ' (' . $status . '): ' . $lastMessage);
         if (!in_array($status, [429, 500, 502, 503, 504], true)) break;
-        if ($attempt === 1) usleep(450000);
+        if ($attempt === 1 && in_array($status, [500, 502, 503, 504], true)) usleep(200000);
+        }
     }
 }
 
