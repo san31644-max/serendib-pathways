@@ -4,6 +4,7 @@ require_once 'config/database.php';
 
 $database = new Database();
 $db = $database->getConnection();
+require __DIR__ . '/includes/import-new-photo-destinations.php';
 
 // Fetch categories for filter dropdown
 $categories_stmt = $db->prepare("SELECT category_id, category_name FROM categories ORDER BY category_name ASC");
