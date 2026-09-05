@@ -8,6 +8,11 @@ Sri Lanka travel website powered by PHP, MariaDB and Gemini.
 2. Configure the database in `config/database.php`.
 3. Copy `config/gemini.example.php` to `config/gemini.local.php` and add the Gemini API key.
 
+For the seven destinations photographed on September 5, 2026, import
+`config/new-photo-destinations.sql` into the existing database. This repeatable
+import adds missing destinations and updates their main and gallery images.
+The original photos remain in `PHOTOS`; web assets are in `assets/destinations/user`.
+
 `config/gemini.local.php` is intentionally excluded from Git.
 
 ## Production deployment
