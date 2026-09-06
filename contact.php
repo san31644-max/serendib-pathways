@@ -363,6 +363,7 @@ include 'includes/header.php';
                             <div>
                                 <h3 class="font-semibold text-gray-800 mb-1">Phone</h3>
                                 <p><a class="text-green-700 hover:text-green-800 font-medium" href="tel:+94774809998">+94-774809998</a></p>
+                                <p><a class="text-green-700 hover:text-green-800 font-medium" href="tel:+94716620407">+94716620407</a></p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-4">
