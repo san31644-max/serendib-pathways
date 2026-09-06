@@ -25,7 +25,7 @@ include 'includes/header.php';
 ?>
 
 <!-- Hero Section -->
-<section class="destinations-hero" style="--hero-image:url('assets/about-6.jpg')">
+<section class="destinations-hero" style="--hero-image:url('PHOTOS/ChatGPT%20Image%20Sep%206,%202026,%2009_02_59%20AM.png')">
     <div class="destinations-hero__veil"></div>
     <div class="catalog-shell destinations-hero__content">
         <span class="destinations-hero__eyebrow"><i></i> The island, revealed</span>
