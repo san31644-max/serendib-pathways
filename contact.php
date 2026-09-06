@@ -357,6 +357,15 @@ include 'includes/header.php';
                     
                     <div class="space-y-6">
                         <div class="flex items-start space-x-4">
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i class="fas fa-phone text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800 mb-1">Phone</h3>
+                                <p><a class="text-green-700 hover:text-green-800 font-medium" href="tel:+94774809998">+94-774809998</a></p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
                             <div class="bg-yellow-100 p-3 rounded-full">
                                 <i class="fas fa-envelope text-yellow-600 text-xl"></i>
                             </div>
