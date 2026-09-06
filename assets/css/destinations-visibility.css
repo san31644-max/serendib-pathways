@@ -1,3 +1,16 @@
+.destinations-hero {
+    background: #173f32;
+}
+
+.destinations-hero__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 48%;
+}
+
 .destination-card {
     min-height: 520px;
     background: #173f32;

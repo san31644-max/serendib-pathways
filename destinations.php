@@ -20,12 +20,13 @@ $stmt->execute();
 $destinations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $extra_stylesheet = 'assets/css/destinations-showcase.css?v=2';
-$extra_stylesheet_secondary = 'assets/css/destinations-visibility.css?v=2';
+$extra_stylesheet_secondary = 'assets/css/destinations-visibility.css?v=3';
 include 'includes/header.php';
 ?>
 
 <!-- Hero Section -->
-<section class="destinations-hero" style="--hero-image:url('PHOTOS/ChatGPT%20Image%20Sep%206,%202026,%2009_02_59%20AM.png')">
+<section class="destinations-hero">
+    <img class="destinations-hero__image" src="PHOTOS/ChatGPT%20Image%20Sep%206,%202026,%2009_02_59%20AM.png" alt="" fetchpriority="high">
     <div class="destinations-hero__veil"></div>
     <div class="catalog-shell destinations-hero__content">
         <span class="destinations-hero__eyebrow"><i></i> The island, revealed</span>
