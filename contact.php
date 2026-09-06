@@ -4,6 +4,8 @@ require_once 'config/database.php';
 
 $message = '';
 $message_type = '';
+$requestedExperience = is_string($_GET['experience'] ?? null) ? trim($_GET['experience']) : '';
+$initialMessage = $requestedExperience !== '' ? 'I would like to plan ' . mb_substr($requestedExperience, 0, 160) . '. Please share more details.' : '';
 
 if ($_POST) {
     $database = new Database();
@@ -335,7 +337,7 @@ include 'includes/header.php';
                         
                         <div>
                             <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message *</label>
-                            <textarea id="message" name="message" rows="5" required placeholder="Tell us about your travel preferences, special requirements, or any questions you have..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"><?php echo isset($_POST['message']) ? htmlspecialchars($_POST['message']) : ''; ?></textarea>
+                            <textarea id="message" name="message" rows="5" required placeholder="Tell us about your travel preferences, special requirements, or any questions you have..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"><?php echo isset($_POST['message']) ? htmlspecialchars($_POST['message']) : htmlspecialchars($initialMessage, ENT_QUOTES); ?></textarea>
                         </div>
                         
                         <div class="flex items-center">

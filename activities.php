@@ -1,15 +1,13 @@
 <?php
-$page_title = "Activities - Serendib Pathways";
+$page_title = "Experiences - Serendib Pathways";
 require_once 'config/database.php';
 
 $database = new Database();
 $db = $database->getConnection();
 
-// Fetch activity types for filter dropdown
-$activityTypesQuery = "SELECT activity_type_id, activity_type_name FROM activity_types ORDER BY activity_type_name ASC";
-$activityTypesStmt = $db->prepare($activityTypesQuery);
-$activityTypesStmt->execute();
-$activityTypes = $activityTypesStmt->fetchAll(PDO::FETCH_ASSOC);
+require_once 'includes/experience-catalog.php';
+$activityTypes = experience_catalog($db)['types'];
+$extra_stylesheet = 'assets/css/experiences.css?v=1';
 
 include 'includes/header.php';
 ?>
@@ -18,8 +16,8 @@ include 'includes/header.php';
 <section class="relative bg-cover bg-center bg-no-repeat text-white py-20" style="background-image: url('assets/about-2.jpg');">
     <div class="absolute inset-0 bg-gradient-to-r from-green-300 via-green-300 to-blue-600 opacity-30"></div>
     <div class="relative container mx-auto px-4 text-center">
-        <h1 class="text-5xl font-bold mb-6">Adventure Activities</h1>
-        <p class="text-xl max-w-3xl mx-auto">Discover exciting eco-friendly activities and adventures across Sri Lanka</p>
+        <h1 class="text-5xl font-bold mb-6">Unforgettable Experiences</h1>
+        <p class="text-xl max-w-3xl mx-auto">From ocean adventures to quiet wellness rituals, find your way to experience Sri Lanka.</p>
     </div>
 </section>
 
