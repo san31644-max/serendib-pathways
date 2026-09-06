@@ -1,14 +1,59 @@
 .destinations-hero {
-    background: #173f32;
+    min-height: clamp(640px, 85vh, 900px);
+    padding: 180px 0 76px;
+    isolation: isolate;
 }
 
-.destinations-hero__image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 48%;
+.destinations-hero::after {
+    z-index: 0;
+    background: linear-gradient(90deg, rgba(5, 24, 20, .72), rgba(5, 24, 20, .28) 48%, rgba(5, 24, 20, .04) 78%);
+    pointer-events: none;
+}
+
+.destinations-hero__veil {
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(5, 24, 20, .32), transparent 28%, rgba(5, 24, 20, .12) 55%, rgba(5, 24, 20, .7));
+    pointer-events: none;
+}
+
+.destinations-hero__content {
+    margin-top: auto;
+    margin-bottom: 0;
+}
+
+.destinations-hero h1 {
+    font-size: clamp(64px, 7.8vw, 112px);
+    text-shadow: 0 4px 32px rgba(0, 0, 0, .25);
+}
+
+.destinations-hero p {
+    max-width: 560px;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, .6);
+}
+
+.destinations-hero a {
+    padding: 14px 20px;
+    border: 1px solid rgba(225, 245, 141, .6);
+    border-radius: 999px;
+    background: rgba(7, 28, 23, .35);
+    backdrop-filter: blur(8px);
+    transition: background .2s ease;
+}
+
+.destinations-hero a:hover {
+    background: rgba(7, 28, 23, .75);
+}
+
+@media (max-width: 700px) {
+    .destinations-hero {
+        min-height: 700px;
+        min-height: 88svh;
+        padding: 150px 0 48px;
+    }
+
+    .destinations-hero h1 {
+        font-size: clamp(58px, 13vw, 84px);
+    }
 }
 
 .destination-card {
